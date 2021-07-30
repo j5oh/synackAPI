@@ -44,6 +44,9 @@ authy_secret = ABCDEFGHIJKLMNOPQRSTUVWXYZ======
 ## requirements.txt
 Your best bet to have all required python3 modules is to run `pip3 install -r requirements.txt`. I cannot help troubleshoot any other modules.
 
+## geckodriver
+You must install [geckodriver](https://github.com/mozilla/geckodriver/) and it must be in your $PATH
+
 # Synack API python3 module
 
 This python3 module provides a class to create objects for interacting with the Synack LP/LP+ platform.
