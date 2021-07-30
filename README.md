@@ -63,6 +63,15 @@ This method creates an object that can be used to interact with the LP/LP+ platf
 
 ## connectToPlatform()
 This method takes connects to the Synack platform and writes the session token to disk. It also stays connected by auto-clicking the alert.
+### Options
+```
+# Push all synack.py traffic through proxy
+# assumes proxy is at http://127.0.0.1:8080
+s1.Proxy = True || False
+
+# Puts the browser in headless mode for use in a linux environment with no GUI
+s1.headless = True || False
+```
 
 ## getSessionToken()
 This method reads a file disk location of `synack.tokenPath` and stores the file contents into the `synack.token` variable. If the file does not contain a valid Synack platform authentication token, the rest of this library will not work.
