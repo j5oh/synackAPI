@@ -12,7 +12,14 @@ import time
 ## risk for being removed from   ##
 ## the platform in its entirety. ##
 ##                               ##
+## IT IS ADVISED THAT YOU DO NOT ##
+## POLL MORE THAN ONCE EVERY 10  ##
+## SECONDS!!! PLEASE REVIEW THE  ##
+## HELP CENTER ARTICLE!          ##
+##                               ##
+
 ## https://support.synack.com/hc/en-us/articles/1500002201401-Mission-Automation-Throttling-MUST-READ ##
+
 ##                               ##
 ## YOU ALONE ARE RESPONSIBLE FOR ##
 ## MAKING SURE YOU DO NOT EXCEED ##
