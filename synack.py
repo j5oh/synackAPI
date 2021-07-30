@@ -31,6 +31,7 @@ class synack:
         self.url_activate_target = "https://platform.synack.com/api/launchpoint"
         self.url_assessments = "https://platform.synack.com/api/assessments"
         self.url_unregistered_slugs = "https://platform.synack.com/api/targets?filter%5Bprimary%5D=unregistered&filter%5Bsecondary%5D=all&filter%5Bcategory%5D=all&sorting%5Bfield%5D=dateUpdated&sorting%5Bdirection%5D=desc&pagination%5Bpage%5D="
+        self.url_profile = "https://platform.synack.com/api/profiles/me"
         self.url_analytics = "https://platform.synack.com/api/listing_analytics/categories?listing_id="
         self.url_hydra = "https://platform.synack.com/api/hydra_search/search/"
         self.url_published_missions = "https://platform.synack.com/api/tasks/v1/tasks?status=PUBLISHED"
@@ -59,13 +60,15 @@ class synack:
 ## Get Synack platform session token ##
     def getSessionToken(self):
         if Path(self.tokenPath).exists():
-#        if path.exists(self.tokenPath):
             with open(self.tokenPath, "r") as f:
                 self.token = f.readline()
             f.close()
         else:
             raise IOError('No Synack token. Run the keepalive script.')
         self.webheaders = {"Authorization": "Bearer " + self.token}
+        response = self.try_requests("GET", self.url_profile, 10)
+        profile = response.json()
+        self.webheaders['user_id'] = profile['user_id']
 
 #################################################
 ## Function to attempt requests multiple times ##
@@ -525,7 +528,6 @@ class synack:
                             next
             return analytics
 
-
 #############################################
 ## This registers all unregistered targets ##
 #############################################
@@ -628,6 +630,8 @@ class synack:
 ## Poll for missions ##
 
     def pollMissions(self):
+        response = self.try_requests("GET", self.url_profile, 10)
+
         response = self.try_requests("GET", self.url_published_missions, 10)
         try:
             jsonResponse = response.json()
