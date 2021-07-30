@@ -601,7 +601,8 @@ class synack:
             f.write(session)
         f.close()
         print("Connected to platform.")
-        driver.quit()
+        if self.headless == True:
+            driver.quit()
         return(0)
 
 ###########
