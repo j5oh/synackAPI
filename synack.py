@@ -12,6 +12,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.firefox.options import Options
 import configparser
 import time
 import pyotp
@@ -119,7 +120,7 @@ class synack:
                 try:
                     if func == "PUT":
                         putData = json.dumps({"listing_id": extra})
-                        newHeaders = dict(webheaders)
+                        newHeaders = dict(self.webheaders)
                         newHeaders['Content-Type'] = "application/json"
                         response =requests.put(URL, headers=newHeaders, data=putData, verify=False)
                         if response.status_code == 401:
