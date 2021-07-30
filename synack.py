@@ -592,7 +592,7 @@ class synack:
         f.close()
         return(0)
         print("Connected to platform.")
-#        driver.quit()
+        driver.quit()
 
 ###########
 ## Hydra ##
