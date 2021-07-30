@@ -14,8 +14,12 @@ This is a library and set of scripts that make SRT life a little easier when int
   * Target types
 * Enable mission-claiming bots
 
+# Acknowledgement
+Thank you Malcolm and Nicolas for helping out!
+
 # Configuration requirements 
 ## synack.conf
+This is a required config file, and is expected to be in the directory ~/.synack/
 ```
 [DEFAULT]
 login_wait = 15
@@ -36,6 +40,9 @@ authy_secret = ABCDEFGHIJKLMNOPQRSTUVWXYZ======
   * base32 secret for generating Authy tokens
   * Guillaume Boudreau provide a nice [walk through](https://gist.github.com/gboudreau/94bb0c11a6209c82418d01a59d958c93) for getting this secret
     * Follow the above to get Authy into debug mode, then use [THIS CODE](https://gist.github.com/louiszuckerman/2dd4fddf8097ce89594bb33426ab5e23#ok-thats-nice-but-i-want-to-get-rid-of-authy-now) to get your valid TOTP SECRET!
+
+## requirements.txt
+Your best bet to have all required python3 modules is to run `pip3 install -r requirements.txt`. I cannot help troubleshoot any other modules.
 
 # Synack API python3 module
 
@@ -133,10 +140,7 @@ This method takes a codename and returns a list of all endpoints reported in tha
 This method takes a codename and returns a json of all hydra reported in that target's `Hydra` tab.
 
 ## pollMissions()
-<strike>This method polls the API for available missions and returns a json to send to `claimMission(missionJson)</strike>
-Removed from class
+This method polls the API for available missions and returns a json to send to `claimMission(missionJson)`
 
-
-## getIPs(cidrs)
-<strike>This method takes a list of CIDR-notation IP ranges and returns a list of corresponding IP addresses</strike>
-Removed from class
+## claimMission(missionJson)
+This method takes a json from the pollMission() function and attempts to claim available missions based on dollar value, highest to lowest
