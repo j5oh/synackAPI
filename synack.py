@@ -598,9 +598,9 @@ class synack:
         with open('/tmp/synacktoken',"w") as f:
             f.write(session)
         f.close()
-        return(0)
         print("Connected to platform.")
         driver.quit()
+        return(0)
 
 ###########
 ## Hydra ##
