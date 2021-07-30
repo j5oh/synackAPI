@@ -630,8 +630,6 @@ class synack:
 ## Poll for missions ##
 
     def pollMissions(self):
-        response = self.try_requests("GET", self.url_profile, 10)
-
         response = self.try_requests("GET", self.url_published_missions, 10)
         try:
             jsonResponse = response.json()
