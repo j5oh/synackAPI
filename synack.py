@@ -34,6 +34,7 @@ class synack:
         self.url_analytics = "https://platform.synack.com/api/listing_analytics/categories?listing_id="
         self.url_hydra = "https://platform.synack.com/api/hydra_search/search/"
         self.url_published_missions = "https://platform.synack.com/api/tasks/v1/tasks?status=PUBLISHED"
+        self.url_logout = "https://platform.synack.com/api/logout"
         self.webheaders = {}
         self.configFile = str(Path.home())+"/.synack/synack.conf"
         self.config = configparser.ConfigParser()
@@ -43,6 +44,7 @@ class synack:
         self.login_wait = int(self.config['DEFAULT']['login_wait'])
         self.login_url = self.config['DEFAULT']['login_url']
         self.authySecret = self.config['DEFAULT']['authy_secret']
+        self.headless = False
 
 ## Set to 'True' for troubleshooting with Burp Suite ##
         self.Proxy = False
@@ -562,7 +564,12 @@ class synack:
 ## Keepalive ##
 ###############
     def connectToPlatform(self):
-        driver = webdriver.Firefox()
+        options = Options()
+        if self.headless == True:
+            options.headless = True
+        else:
+            options.headless = False
+        driver = webdriver.Firefox(options=options)
         driver.get(self.login_url)
         assert "Synack" in driver.title
 ## Fill in the email address ##
