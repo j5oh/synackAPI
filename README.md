@@ -18,6 +18,9 @@ This is a library and set of scripts that make SRT life a little easier when int
 Thank you Malcolm and Nicolas for helping out!
 
 # Configuration requirements 
+## Operating System
+This has been developed on Linux. I have no idea if it will work on Windows. It might, but your mileage may vary. I do not use windows. If you do, and you want to test, please do. 
+
 ## synack.conf
 This is a required config file, and is expected to be in the directory ~/.synack/
 ```
