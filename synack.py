@@ -81,6 +81,14 @@ class synack:
             "http" : http_proxy,
             "https" : https_proxy
         }
+
+        url = urlparse(URL)
+        scheme = url.scheme
+        netloc = url.netloc
+        path   = url.path
+        port   = url.port
+        platform = "platform.synack"
+
         if self.Proxy == True:
             for attempt in range(times):
                 try:
@@ -89,7 +97,7 @@ class synack:
                         newHeaders = dict(self.webheaders)
                         newHeaders['Content-Type'] = "application/json"
                         response = requests.put(URL, headers=newHeaders, data=putData, proxies=proxyDict, verify=False)
-                        if response.status_code == 401:
+                        if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
                         else:
@@ -97,7 +105,7 @@ class synack:
                     elif func == "GET":
                         if extra == None:
                             response = requests.get(URL, headers=self.webheaders, proxies=proxyDict, verify=False)
-                            if response.status_code == 401:
+                            if response.status_code == 401 and platform in netloc:
                                 self.connectToPlatform()
                                 self.getSessionToken()
                             else:
@@ -105,14 +113,14 @@ class synack:
                         else:
                             parameters = {'page': extra}
                             response = requests.get(URL, headers=self.webheaders, params=parameters, proxies=proxyDict, verify=False)
-                            if response.status_code == 401:
+                            if response.status_code == 401 and platform in netloc:
                                 self.connectToPlatform()
                                 self.getSessionToken()
                             else:
                                 return response
                     elif func == "POST":
                         response = requests.post(URL, headers=self.webheaders, proxies=proxyDict, json=extra, verify=False)
-                        if response.status_code == 401:
+                        if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
                         else:
@@ -128,7 +136,7 @@ class synack:
                         newHeaders = dict(self.webheaders)
                         newHeaders['Content-Type'] = "application/json"
                         response =requests.put(URL, headers=newHeaders, data=putData, verify=False)
-                        if response.status_code == 401:
+                        if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
                         else:
@@ -136,7 +144,7 @@ class synack:
                     elif func == "GET":
                         if extra == None:
                             response =requests.get(URL, headers=self.webheaders, verify=False)
-                            if response.status_code == 401:
+                            if response.status_code == 401 and platform in netloc:
                                 self.connectToPlatform()
                                 self.getSessionToken()
                             else:
@@ -144,14 +152,14 @@ class synack:
                         else:
                             parameters = {'page': extra}
                             response = requests.get(URL, headers=self.webheaders, params=parameters, verify=False)
-                            if response.status_code == 401:
+                            if response.status_code == 401 and platform in netloc:
                                 self.connectToPlatform()
                                 self.getSessionToken()
                             else:
                                 return response
                     elif func == "POST":
                         response =  requests.post(URL, headers=self.webheaders, json=extra, verify=False)
-                        if response.status_code == 401:
+                        if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
                         else:
