@@ -1,4 +1,4 @@
-#import ipaddress
+import ipaddress
 from netaddr import IPNetwork
 import requests
 import os
@@ -371,15 +371,16 @@ class synack:
 
 ########################################
 ## This converts CIDR list to IP list ##
+## This is a much faster method, previous method was causing problems on large hosts ##
 ########################################
     def getIPs(self, cidrs):
         IPs = []
         for i in range(len(cidrs)):
             if cidrs[i] != "":
-                for ip in IPNetwork(cidrs[i]):
+                for ip in ipaddress.ip_network(cidrs[i]):
                     IPs.append(str(ip))
         return(IPs)
-
+    
 ##############################################
 ## This gets all of your passed assessments ##
 ##############################################
