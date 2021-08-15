@@ -45,7 +45,6 @@ class synack:
         self.login_wait = int(self.config['DEFAULT']['login_wait'])
         self.login_url = self.config['DEFAULT']['login_url']
         self.authySecret = self.config['DEFAULT']['authy_secret']
-        self.webhook_url = self.config['DEFAULT']['webhook_url']
         self.headless = False
 
 ## Set to 'True' for troubleshooting with Burp Suite ##
@@ -685,9 +684,5 @@ class synack:
                 claimed = False
             missionDict = {"target": campaign, "payout": payout, "claimed": claimed}
             missionList.append(missionDict)
-            ## Send to slack as well
-            response = requests.post(self.webhook_url, data=json.dumps(missionList), headers={'Content-Type': 'application/json'})
-            if response.status_code != 200:
-                raise ValueError('Request to slack returned an error %s, the response is:\n%s' % (response.status_code, response.text))
         return(missionList)
             
