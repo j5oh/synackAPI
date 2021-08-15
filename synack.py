@@ -665,6 +665,7 @@ class synack:
         sorted_dict = {k: v for k, v in sorted_tuples}
 ################
         i = len(sorted_dict.keys())
+        missionList = []
         for key in sorted_dict.keys():
             i-= 1
             campaign = missionJson[key]["campaign"]["title"]
@@ -672,11 +673,14 @@ class synack:
             orgID = missionJson[key]["organization"]["id"]
             listingID = missionJson[key]["listing"]["id"]
             taskID = missionJson[key]["id"]
+            payout = str(missionJson[key]["payout"]["amount"])
             url_claimPath = "https://platform.synack.com/api/tasks/v1/organizations/" + orgID + "/listings/" + listingID + "/campaigns/" + campaignID + "/tasks/" + taskID + "/transitions"
             claimResponse = self.try_requests("POST", url_claimPath, 10, claim)
             if claimResponse.status_code == 201:
-                claimed = "Claimed $" + str(missionJson[key]["payout"]["amount"]) + " mission on " + missionJson[key]["listing"]["title"] + "."
+                claimed = True
             else:
-                claimed = "Missed $"+str(missionJson[key]["payout"]["amount"]) + " mission on " + missionJson[key]["listing"]["title"] +" : "  + str(claimResponse.status_code)
-            print(claimed)
-
+                claimed = False
+            missionDict = {"target": campaign, "payout": payout) "claimed": claimed}
+            missionList.append(missionDict)
+        return(missionDict)
+            
