@@ -683,5 +683,5 @@ class synack:
                 claimed = False
             missionDict = {"target": campaign, "payout": payout) "claimed": claimed}
             missionList.append(missionDict)
-        return(missionDict)
+        return(missionList)
             
