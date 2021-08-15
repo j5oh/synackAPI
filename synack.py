@@ -274,6 +274,7 @@ class synack:
     def connectToTarget(self, codename):
         slug = self.getTargetID(codename)
         response = self.try_requests("PUT", self.url_activate_target, 10, slug)
+        time.sleep(5)
         return response.status_code
 
 ########################################################
@@ -681,7 +682,7 @@ class synack:
                 claimed = True
             else:
                 claimed = False
-            missionDict = {"target": campaign, "payout": payout) "claimed": claimed}
+            missionDict = {"target": campaign, "payout": payout, "claimed": claimed}
             missionList.append(missionDict)
         return(missionList)
             
