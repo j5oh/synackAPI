@@ -160,4 +160,12 @@ This method takes a codename and returns a json of all hydra reported in that ta
 This method polls the API for available missions and returns a json to send to `claimMission(missionJson)`
 
 ## claimMission(missionJson)
-This method takes a json from the pollMission() function and attempts to claim available missions based on dollar value, highest to lowest
+This method takes a json from the pollMission() function and attempts to claim available missions based on dollar value, highest to lowest. The return value is a list of dicts in the format:
+```
+[
+  {
+    'target': 'Target Name',
+    'payout': '20',
+    'claimed': False
+  }
+]
