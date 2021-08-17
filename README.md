@@ -169,3 +169,14 @@ This method takes a json from the pollMission() function and attempts to claim a
     'claimed': False
   }
 ]
+```
+## Docker setup
+There are few ways to run the module under docker, the fastest way will be to obtain it directly and run it using <br>
+```docker run -d --name synackapi --dns 8.8.8.8 --rm -v ~/.synack:/root/.synack krasn/synackapi```<br>
+The above will run the docker directly under the name synackapi and will use your synack.conf as it's configured per above instructions. The default mode of the docker will be to stay on the background and poll for new targets every hour which will accept.
+<br>
+To run the missions bot an idea will be to run the docker with the following method:<br>
+```docker run -ti --name synackapi --dns 8.8.8.8 --rm -v ~/.synack:/root/.synack krasn/synackapi python3 bot.py```<br>
+or if it's already running <br>
+```docker exec -ti synackapi krasn/synackapi python3 bot.py```<br>
+* Notes ** If would like to build the docker from scratch instructions are on Dockerfile, you will additionally need to modify synack.conf file and set `self.headless = True`
