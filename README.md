@@ -180,3 +180,4 @@ To run the missions bot an idea will be to run the docker with the following met
 or if it's already running <br>
 ```docker exec -ti synackapi krasn/synackapi python3 bot.py```<br>
 * Notes ** If would like to build the docker from scratch instructions are on Dockerfile, you will additionally need to modify synack.conf file and set `self.headless = True`
+* To simply pull the docker image and do nothing you can always use ```docker pull krasn/synackapi```
