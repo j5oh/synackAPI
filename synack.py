@@ -378,7 +378,7 @@ class synack:
         IPs = []
         for i in range(len(cidrs)):
             if cidrs[i] != "":
-                for ip in ipaddress.ip_network(cidrs[i]):
+                for ip in IPNetwork(cidrs[i]):
                     IPs.append(str(ip))
         return(IPs)
     
