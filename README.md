@@ -150,8 +150,8 @@ https://www.example.com/*
 This method registers all unregistered targets
 <br>**Thanks Ozgur for most of the leg work :)**
 
-## getAnalytics(codename)
-This method takes a codename and returns a list of all endpoints reported in that target's `Analytics` tab.
+## getAnalytics(codename, status)
+This method takes a codename and status `accepted | rejected | in_queue | all` and returns a list of all endpoints reported in that target's `Analytics` tab.
 
 ## getHydra(codename)
 This method takes a codename and returns a json of all hydra reported in that target's `Hydra` tab.

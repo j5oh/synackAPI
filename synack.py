@@ -398,9 +398,16 @@ class synack:
 ##########################################################
 ## This gets endpoints from Web Application "Analytics" ##
 ##########################################################
-    def getAnalytics(self, codename):
+    def getAnalytics(self, codename, status="all"):
         slug = self.getTargetID(codename)
-        url_analytics = self.url_analytics + slug
+        if status.lower() == "accepted":
+            url_analytics = self.url_analytics + slug + "&status=accepted"
+        elif status.lower() == "in_queue":
+            url_analytics = self.url_analytics + slug + "&status=in_queue"
+        elif status.lower() == "rejected":
+            url_analytics = self.url_analytics + slug + "&status=rejected"
+        else:
+            url_analytics = self.url_analytics + slug
         response = self.try_requests("GET", url_analytics, 10)
         jsonResponse = response.json()
         analytics = []
