@@ -347,7 +347,8 @@ class synack:
                                         'netloc': netloc,
                                         'path': path,
                                         'port': port,
-                                        'wildcard': wildcard
+                                        'wildcard': wildcard,
+                                        'fullURI' : scheme+netloc
                                     }
                     allRules.append(scopeDict)
                     j+=1
