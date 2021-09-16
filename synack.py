@@ -126,7 +126,7 @@ class synack:
                         else:
                             return response
                     elif func == "PATCH":
-                        response = requests.patch(URL, headers=self.webheaders, proxies=proxyDict, params=extra, verify=False)
+                        response = requests.patch(URL, headers=self.webheaders, proxies=proxyDict, json=extra, verify=False)
                         if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
@@ -172,7 +172,7 @@ class synack:
                         else:
                             return response
                     elif func == "PATCH":
-                        response = requests.patch(URL, headers=self.webheaders, params=extra, verify=False)
+                        response = requests.patch(URL, headers=self.webheaders, json=extra, verify=False)
                         if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
