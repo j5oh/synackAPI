@@ -25,8 +25,10 @@ class synack:
     def __init__(self):
         self.jsonResponse = []
         self.assessments = []
-        self.tokenPath = "/tmp/synacktoken"
+        self.sessionTokenPath = "/tmp/synacktoken"
         self.token = ""
+        self.notificationTokenPath = "/tmp/notificationtoken"
+        self.notificationToken = ""
         self.url_registered_summary = "https://platform.synack.com/api/targets/registered_summary"
         self.url_activate_target = "https://platform.synack.com/api/launchpoint"
         self.url_assessments = "https://platform.synack.com/api/assessments"
@@ -36,6 +38,7 @@ class synack:
         self.url_hydra = "https://platform.synack.com/api/hydra_search/search/"
         self.url_published_missions = "https://platform.synack.com/api/tasks/v1/tasks?status=PUBLISHED"
         self.url_logout = "https://platform.synack.com/api/logout"
+        self.url_notification_token = "https://platform.synack.com/api/users/notifications_token"
         self.webheaders = {}
         self.configFile = str(Path.home())+"/.synack/synack.conf"
         self.config = configparser.ConfigParser()
@@ -59,8 +62,8 @@ class synack:
 
 ## Get Synack platform session token ##
     def getSessionToken(self):
-        if Path(self.tokenPath).exists():
-            with open(self.tokenPath, "r") as f:
+        if Path(self.sessionTokenPath).exists():
+            with open(self.sessionTokenPath, "r") as f:
                 self.token = f.readline()
             f.close()
         else:
@@ -625,12 +628,12 @@ class synack:
         authy_submit_path = '/html/body/div[2]/div/div/div[2]/form/fieldset/div[2]'
         driver.find_element_by_xpath(authy_submit_path).click()
         while True:
-            session = driver.execute_script("return sessionStorage.getItem('shared-session-com.synack.accessToken')")
-            if isinstance(session, str):
+            self.token = driver.execute_script("return sessionStorage.getItem('shared-session-com.synack.accessToken')")
+            if isinstance(self.token, str):
                 break
 ## Write the session token to /tmp/synacktoken ##
-        with open('/tmp/synacktoken',"w") as f:
-            f.write(session)
+        with open(self.sessionTokenPath,"w") as f:
+            f.write(self.token)
         f.close()
         print("Connected to platform.")
         if self.headless == True:
@@ -707,4 +710,19 @@ class synack:
             missionDict = {"target": listingID, "payout": payout, "claimed": claimed}
             missionList.append(missionDict)
         return(missionList)
-            
+
+########################
+## Notification Token ##
+########################
+
+    def getNotificationToken(self):
+        response = self.try_requests("GET", self.url_notification_token, 10)
+        try:
+            jsonResponse = response.json()
+        except:
+            jsonResponse = {}
+            return(1)
+        self.notificationToken = jsonResponse['token']
+        with open(self.notificationTokenPath,"w") as f:
+            f.write(self.notificationToken)
+        return(0)
