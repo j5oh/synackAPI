@@ -174,6 +174,9 @@ This method takes a json from the pollMission() function and attempts to claim a
 ## getNotificationToken()
 This method is used to obtain the bearer token used to authenticate to the notifications.synack.com API.
 
+## markNotificationsRead()
+This method marks all notifications as read.
+
 ## Docker setup
 There are few ways to run the module under docker, the fastest way will be to obtain it directly and run it using <br>
 ```docker run -d --name synackapi --dns 8.8.8.8 --rm -v ~/.synack:/root/.synack krasn/synackapi```<br>
