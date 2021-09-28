@@ -1,0 +1,15 @@
+name: Push
+on:
+push:
+jobs:
+slackNotification:
+name: Slack Notification
+runs-on: ubuntu-latest
+steps:
+- name: Slack Notification
+uses: rtCamp/action-slack-notify@master
+env:
+SLACK_CHANNEL: tools
+SLACK_MESSAGE: ‘New updates on https://github.com/gexpose/synackAPI
+SLACK_TITLE: ‘API class update’
+SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }
