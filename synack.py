@@ -39,6 +39,7 @@ class synack:
         self.url_published_missions = "https://platform.synack.com/api/tasks/v1/tasks?status=PUBLISHED"
         self.url_logout = "https://platform.synack.com/api/logout"
         self.url_notification_token = "https://platform.synack.com/api/users/notifications_token"
+        self.url_notification_api = "https://notifications.synack.com/api/v2/"
         self.webheaders = {}
         self.configFile = str(Path.home())+"/.synack/synack.conf"
         self.config = configparser.ConfigParser()
@@ -725,4 +726,21 @@ class synack:
         self.notificationToken = jsonResponse['token']
         with open(self.notificationTokenPath,"w") as f:
             f.write(self.notificationToken)
+        return(0)
+
+############################
+## Read All Notifications ##
+############################
+
+    def markNotificationsRead(self):
+        if not self.notificationToken:
+            self.getNotificationToken()
+        readNotifications = self.url_notification_api+"read_all?authorization_token="+self.notificationToken
+        del self.webheaders['Authorization']
+        response = self.try_requests("POST", readNotifications, 10)
+        self.webheaders['Authorization'] = "Bearer " + self.token
+        try:
+            textResponse = str(response.content)
+        except:
+            return(1)
         return(0)
