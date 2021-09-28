@@ -13,6 +13,7 @@ This is a library and set of scripts that make SRT life a little easier when int
   * Slugs
   * Target types
 * Enable mission-claiming bots
+* Manage notifications
 
 # Acknowledgement
 Thank you Malcolm and Nicolas for helping out!
@@ -177,7 +178,7 @@ This method is used to obtain the bearer token used to authenticate to the notif
 ## markNotificationsRead()
 This method marks all notifications as read.
 
-## pollNotificatinos()
+## pollNotifications()
 This method retrieves all unread notifications and returns a list of dicts with the following fields:
 ```
 {
