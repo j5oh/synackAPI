@@ -744,3 +744,34 @@ class synack:
         except:
             return(1)
         return(0)
+
+########################
+## Read Notifications ##
+########################
+
+    def pollNotifications(self):
+        pageIterator=1
+        breakOuterLoop = 0
+        notifications = []
+        if not self.notificationToken:
+            self.getNotificationToken()
+        while True:
+            notificationsUrl = self.url_notification_api+"notifications?pagination%5Bpage%5D="+str(pageIterator)+"&pagination%5Bper_page%5D=15&meta=1"
+            self.webheaders['Authorization'] = "Bearer " + self.notificationToken
+            response = self.try_requests("GET", notificationsUrl, 10)
+            self.webheaders['Authorization'] = "Bearer " + self.token
+            try:
+                jsonResponse = response.json()
+            except:
+                return(1)
+            for i in range(len(jsonResponse)):
+                if jsonResponse[i]["read"] == False:
+                    notifications.append(jsonResponse[i])
+                else:
+                    breakOuterLoop=1
+                    break    
+            if breakOuterLoop == 1:
+                break
+            else:
+                pageIterator=pageIterator+1
+        return(notifications)
