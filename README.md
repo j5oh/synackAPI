@@ -177,6 +177,24 @@ This method is used to obtain the bearer token used to authenticate to the notif
 ## markNotificationsRead()
 This method marks all notifications as read.
 
+## pollNotificatinos()
+This method retrieves all unread notifications and returns a list of dicts with the following fields:
+```
+{
+  "id": INT,                  # ID of the notifications
+  "user_id": INT,             # Your synack ID (integer)
+  "subject": "STRING",        # Codename, dollar amount of transfer, etc..
+  "subject_type": "STRING",   # What is this? listing update, cashout, etc..
+  "action": "STRING",         # What is the action: outage_starts, scope, etc..
+  "url": "STRING",            # Relevant URL path
+  "created_at": "DATETIME",
+  "read": BOOL,               # true/false
+  "meta": {
+                              # All sorts of other stuff
+  }
+}
+```
+
 ## Docker setup
 There are few ways to run the module under docker, the fastest way will be to obtain it directly and run it using <br>
 ```docker run -d --name synackapi --dns 8.8.8.8 --rm -v ~/.synack:/root/.synack krasn/synackapi```<br>
