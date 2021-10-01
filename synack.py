@@ -775,3 +775,16 @@ class synack:
             else:
                 pageIterator=pageIterator+1
         return(notifications)
+
+#############################
+## Get Current Target Slug ##
+#############################
+
+    def getCurrentTargetSlug(self):
+        response = self.try_requests("GET", self.url_activate_target, 10)
+        try:
+            jsonResponse = response.json()
+        except:
+            return(1)
+        if jsonResponse['slug']:
+            return(jsonResponse['slug'])

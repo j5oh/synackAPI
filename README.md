@@ -118,6 +118,9 @@ This method takes a target codename and returns the project slug. This method is
 ## getCodenameFromSlug(slug)
 This method takes a project slug and returns the target codename. This method is generally not used by end users, but rather supports other function methods.
 
+## getCurrentTargetSlug()
+This method returns the slug of whatever target you are connected to. If not connected to a target, this will return `None`.
+
 ## getScope(codename)
 This method takes a codename and returns its scope as a list of dicts.
 * `Host` targets return the CIDR notation ranges
