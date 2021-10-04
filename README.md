@@ -160,6 +160,9 @@ This method takes a codename and status `accepted | rejected | in_queue | all` a
 ## getHydra(codename)
 This method takes a codename and returns a json of all hydra reported in that target's `Hydra` tab.
 
+## getRoes(slug):
+This method takes a target slug and returns any additional rules of engagement as a list.
+
 ## pollMissions()
 This method polls the API for available missions and returns a json to send to `claimMission(missionJson)`
 

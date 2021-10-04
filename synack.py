@@ -30,6 +30,7 @@ class synack:
         self.notificationTokenPath = "/tmp/notificationtoken"
         self.notificationToken = ""
         self.url_registered_summary = "https://platform.synack.com/api/targets/registered_summary"
+        self.url_scope_summary = "https://platform.synack.com/api/targets/"
         self.url_activate_target = "https://platform.synack.com/api/launchpoint"
         self.url_assessments = "https://platform.synack.com/api/assessments"
         self.url_unregistered_slugs = "https://platform.synack.com/api/targets?filter%5Bprimary%5D=unregistered&filter%5Bsecondary%5D=all&filter%5Bcategory%5D=all&sorting%5Bfield%5D=dateUpdated&sorting%5Bdirection%5D=desc&pagination%5Bpage%5D="
@@ -764,6 +765,8 @@ class synack:
                 jsonResponse = response.json()
             except:
                 return(1)
+            if not jsonResponse:
+                break
             for i in range(len(jsonResponse)):
                 if jsonResponse[i]["read"] == False:
                     notifications.append(jsonResponse[i])
@@ -788,3 +791,22 @@ class synack:
             return(1)
         if jsonResponse['slug']:
             return(jsonResponse['slug'])
+
+##############
+## Get ROEs ##
+##############
+
+    def getRoes(self, slug):
+        requestURL = self.url_scope_summary + str(slug)
+        response = self.try_requests("GET", requestURL, 10)
+        roes = list()
+        try:
+            jsonResponse = response.json()
+        except:
+            return(1)
+        if not jsonResponse['roes']:
+            return(roes)
+        else:
+            for i in range(len(jsonResponse['roes'])):
+                roes.append(jsonRespons['roes'][i])
+            return(roes)
