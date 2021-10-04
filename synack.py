@@ -808,5 +808,5 @@ class synack:
             return(roes)
         else:
             for i in range(len(jsonResponse['roes'])):
-                roes.append(jsonRespons['roes'][i])
+                roes.append(jsonResponse['roes'][i])
             return(roes)
