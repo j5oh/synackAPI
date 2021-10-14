@@ -50,6 +50,8 @@ class synack:
         self.login_wait = int(self.config['DEFAULT']['login_wait'])
         self.login_url = self.config['DEFAULT']['login_url']
         self.authySecret = self.config['DEFAULT']['authy_secret']
+        self.connector = False
+        self.webdriver = None
         self.headless = False
 
 ## Set to 'True' for troubleshooting with Burp Suite ##
@@ -640,6 +642,8 @@ class synack:
         print("Connected to platform.")
         if self.headless == True:
             driver.quit()
+        if self.connector == True:
+            self.webdriver = driver
         return(0)
 
 ###########
