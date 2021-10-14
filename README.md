@@ -46,12 +46,17 @@ webhook_url = https://hooks.slack.com/services/...
   * Guillaume Boudreau provide a nice [walk through](https://gist.github.com/gboudreau/94bb0c11a6209c82418d01a59d958c93) for getting this secret
     * Follow the above to get Authy into debug mode, then use [THIS CODE](https://gist.github.com/louiszuckerman/2dd4fddf8097ce89594bb33426ab5e23#ok-thats-nice-but-i-want-to-get-rid-of-authy-now) to get your valid TOTP SECRET!
 * webhook_url is the incoming webhook url for slack notifications.  This will be used from the bot.py to inform you about obtained missions in real time. To create one simply visit https://api.slack.com/apps?new_app=1 and create an app to add later an incoming webhook into it.  You can choose any workspace to do so.
+* gecko true/false (default true) - if false, the `requests` module will be used for the login flow, instead of the geckodriver (works well on Windows)
+* proxy true/false (default false) - if true, route requests through a local proxy for debugging
+* proxyport (default 8080) - local proxy port used for debugging
+* session_token_path (default /tmp/synacktoken) - location to store synack token
+* notification_token_path (default /tmp/notificationtoken) - location to store notification token
 
 ## requirements.txt
 Your best bet to have all required python3 modules is to run `pip3 install -r requirements.txt`. I cannot help troubleshoot any other modules.
 
 ## geckodriver
-You must install [geckodriver](https://github.com/mozilla/geckodriver/) and it must be in your $PATH
+You must install [geckodriver](https://github.com/mozilla/geckodriver/) and it must be in your $PATH (note, this is currently true even if you have `gecko` set to `False` in the config file)
 
 # Synack API python3 module
 

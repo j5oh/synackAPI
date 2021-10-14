@@ -1,6 +1,7 @@
 import ipaddress
 from netaddr import IPNetwork
 import requests
+import re
 import os
 import json
 from pathlib import Path
@@ -23,11 +24,10 @@ warnings.filterwarnings("ignore")
 class synack:
     codename = None
     def __init__(self):
+        self.session = requests.Session()
         self.jsonResponse = []
         self.assessments = []
-        self.sessionTokenPath = "/tmp/synacktoken"
         self.token = ""
-        self.notificationTokenPath = "/tmp/notificationtoken"
         self.notificationToken = ""
         self.url_registered_summary = "https://platform.synack.com/api/targets/registered_summary"
         self.url_scope_summary = "https://platform.synack.com/api/targets/"
@@ -50,10 +50,16 @@ class synack:
         self.login_wait = int(self.config['DEFAULT']['login_wait'])
         self.login_url = self.config['DEFAULT']['login_url']
         self.authySecret = self.config['DEFAULT']['authy_secret']
+        self.sessionTokenPath = self.config['DEFAULT'].get('session_token_path',"/tmp/synacktoken")
+        self.notificationTokenPath = self.config['DEFAULT'].get('notification_token_path',"/tmp/notificationtoken")
         self.headless = False
+        # set to false to use the requests-based login
+        self.gecko = self.config['DEFAULT'].getboolean('gecko',True)
+        self.proxyport = self.config['DEFAULT'].getint('proxyport',8080)
 
 ## Set to 'True' for troubleshooting with Burp Suite ##
-        self.Proxy = False
+        self.Proxy = self.config['DEFAULT'].getboolean('proxy',False)
+
 #########
     def getAuthy(self):
         totp = pyotp.TOTP(self.authySecret)
@@ -80,8 +86,8 @@ class synack:
 #################################################
 
     def try_requests(self, func, URL, times, extra=None):
-        http_proxy  = "http://127.0.0.1:8080"
-        https_proxy = "http://127.0.0.1:8080"
+        http_proxy  = "http://127.0.0.1:" + self.proxyport
+        https_proxy = "http://127.0.0.1:" + self.proxyport
         proxyDict = {
             "http" : http_proxy,
             "https" : https_proxy
@@ -101,7 +107,7 @@ class synack:
                         putData = json.dumps({"listing_id": extra})
                         newHeaders = dict(self.webheaders)
                         newHeaders['Content-Type'] = "application/json"
-                        response = requests.put(URL, headers=newHeaders, data=putData, proxies=proxyDict, verify=False)
+                        response = self.session.put(URL, headers=newHeaders, data=putData, proxies=proxyDict, verify=False)
                         if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
@@ -109,7 +115,7 @@ class synack:
                             return response
                     elif func == "GET":
                         if extra == None:
-                            response = requests.get(URL, headers=self.webheaders, proxies=proxyDict, verify=False)
+                            response = self.session.get(URL, headers=self.webheaders, proxies=proxyDict, verify=False)
                             if response.status_code == 401 and platform in netloc:
                                 self.connectToPlatform()
                                 self.getSessionToken()
@@ -117,21 +123,21 @@ class synack:
                                 return response
                         else:
                             parameters = {'page': extra}
-                            response = requests.get(URL, headers=self.webheaders, params=parameters, proxies=proxyDict, verify=False)
+                            response = self.session.get(URL, headers=self.webheaders, params=parameters, proxies=proxyDict, verify=False)
                             if response.status_code == 401 and platform in netloc:
                                 self.connectToPlatform()
                                 self.getSessionToken()
                             else:
                                 return response
                     elif func == "POST":
-                        response = requests.post(URL, headers=self.webheaders, proxies=proxyDict, json=extra, verify=False)
+                        response = self.session.post(URL, headers=self.webheaders, proxies=proxyDict, json=extra, verify=False)
                         if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
                         else:
                             return response
                     elif func == "PATCH":
-                        response = requests.patch(URL, headers=self.webheaders, proxies=proxyDict, json=extra, verify=False)
+                        response = self.session.patch(URL, headers=self.webheaders, proxies=proxyDict, json=extra, verify=False)
                         if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
@@ -147,7 +153,7 @@ class synack:
                         putData = json.dumps({"listing_id": extra})
                         newHeaders = dict(self.webheaders)
                         newHeaders['Content-Type'] = "application/json"
-                        response =requests.put(URL, headers=newHeaders, data=putData, verify=False)
+                        response =self.session.put(URL, headers=newHeaders, data=putData, verify=False)
                         if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
@@ -155,7 +161,7 @@ class synack:
                             return response
                     elif func == "GET":
                         if extra == None:
-                            response =requests.get(URL, headers=self.webheaders, verify=False)
+                            response =self.session.get(URL, headers=self.webheaders, verify=False)
                             if response.status_code == 401 and platform in netloc:
                                 self.connectToPlatform()
                                 self.getSessionToken()
@@ -163,21 +169,21 @@ class synack:
                                 return response
                         else:
                             parameters = {'page': extra}
-                            response = requests.get(URL, headers=self.webheaders, params=parameters, verify=False)
+                            response = self.session.get(URL, headers=self.webheaders, params=parameters, verify=False)
                             if response.status_code == 401 and platform in netloc:
                                 self.connectToPlatform()
                                 self.getSessionToken()
                             else:
                                 return response
                     elif func == "POST":
-                        response =  requests.post(URL, headers=self.webheaders, json=extra, verify=False)
+                        response =  self.session.post(URL, headers=self.webheaders, json=extra, verify=False)
                         if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
                         else:
                             return response
                     elif func == "PATCH":
-                        response = requests.patch(URL, headers=self.webheaders, json=extra, verify=False)
+                        response = self.session.patch(URL, headers=self.webheaders, json=extra, verify=False)
                         if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
@@ -602,7 +608,57 @@ class synack:
 ###############
 ## Keepalive ##
 ###############
+
     def connectToPlatform(self):
+        if self.gecko:
+            return self.connectToPlatformGecko()
+        else:
+            return self.connectToPlatformRequests()
+
+    def connectToPlatformRequests(self):
+        # Pull a valid CSRF token for requests in login flow
+        response = self.try_requests("GET", "https://login.synack.com/", 10)
+        # <meta name="csrf-token" content="..."/>
+        m = re.search('<meta name="csrf-token" content="([^"]*)"', response.text)
+        csrf_token = m.group(1)
+        self.webheaders['X-CSRF-Token'] = csrf_token
+
+        data={"email":self.email,"password":self.password}
+        response = self.try_requests("POST", "https://login.synack.com/api/authenticate", 1, data)
+        jsonResponse = response.json()
+        if not jsonResponse['success']:
+            print("Error logging in: "+jsonResponse)
+            return False
+        
+        progress_token = jsonResponse['progress_token']
+        print("Got progress token: " + progress_token)
+
+        data={"authy_token":self.getAuthy(),"progress_token":progress_token}
+        response = self.try_requests("POST", "https://login.synack.com/api/authenticate", 1, data)
+        jsonResponse = response.json()
+
+        grant_token = jsonResponse['grant_token']
+        print("Got grant token: " + grant_token)
+
+        # 2 requests required here to confirm the grant token - once to the HTML page and once to the API
+        response = self.try_requests("GET", "https://platform.synack.com/?grant_token="+grant_token, 1)
+        self.webheaders['X-Requested-With'] = "XMLHttpRequest"
+        response = self.try_requests("GET", "https://platform.synack.com/token?grant_token="+grant_token, 1)
+        jsonResponse = response.json()
+        access_token = jsonResponse['access_token']
+
+        print("Got access token: " + access_token)
+        self.token = access_token
+        with open(self.sessionTokenPath,"w") as f:
+            f.write(self.token)
+        f.close()
+
+        # Remove these headers so they don't affect other requests
+        del self.webheaders['X-Requested-With']
+        del self.webheaders['X-CSRF-Token']
+
+
+    def connectToPlatformGecko(self):
         options = Options()
         if self.headless == True:
             options.headless = True
