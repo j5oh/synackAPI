@@ -378,7 +378,10 @@ class synack:
             scopeURL = "https://platform.synack.com/api/targets/"+slug+"/cidrs"
             cidrs = []
             x = 1
-            response = self.try_requests("GET", scopeURL, 10, x)
+            try:
+                response = self.try_requests("GET", scopeURL, 10, x)
+            except requests.exceptions.RequestException as e:
+                raise SystemExit(e)
             temp = json.dumps(response.json()['cidrs']).replace("[","").replace("]","").replace("\"","").replace(", ","\n").split("\n")
             cidrs.extend(temp)
             while len(temp) > 1:
