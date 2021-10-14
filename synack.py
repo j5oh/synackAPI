@@ -52,6 +52,8 @@ class synack:
         self.authySecret = self.config['DEFAULT']['authy_secret']
         self.sessionTokenPath = self.config['DEFAULT'].get('session_token_path',"/tmp/synacktoken")
         self.notificationTokenPath = self.config['DEFAULT'].get('notification_token_path',"/tmp/notificationtoken")
+        self.connector = False
+        self.webdriver = None
         self.headless = False
         # set to false to use the requests-based login
         self.gecko = self.config['DEFAULT'].getboolean('gecko',True)
@@ -696,6 +698,8 @@ class synack:
         print("Connected to platform.")
         if self.headless == True:
             driver.quit()
+        if self.connector == True:
+            self.webdriver = driver
         return(0)
 
 ###########
