@@ -88,8 +88,8 @@ class synack:
 #################################################
 
     def try_requests(self, func, URL, times, extra=None):
-        http_proxy  = "http://127.0.0.1:" + self.proxyport
-        https_proxy = "http://127.0.0.1:" + self.proxyport
+        http_proxy  = "http://127.0.0.1:%d" % self.proxyport
+        https_proxy = "http://127.0.0.1:%d" % self.proxyport
         proxyDict = {
             "http" : http_proxy,
             "https" : https_proxy
