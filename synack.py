@@ -636,14 +636,12 @@ class synack:
             return False
         
         progress_token = jsonResponse['progress_token']
-        print("Got progress token: " + progress_token)
 
         data={"authy_token":self.getAuthy(),"progress_token":progress_token}
         response = self.try_requests("POST", "https://login.synack.com/api/authenticate", 1, data)
         jsonResponse = response.json()
 
         grant_token = jsonResponse['grant_token']
-        print("Got grant token: " + grant_token)
 
         # 2 requests required here to confirm the grant token - once to the HTML page and once to the API
         response = self.try_requests("GET", "https://platform.synack.com/?grant_token="+grant_token, 1)
@@ -652,7 +650,6 @@ class synack:
         jsonResponse = response.json()
         access_token = jsonResponse['access_token']
 
-        print("Got access token: " + access_token)
         self.token = access_token
         with open(self.sessionTokenPath,"w") as f:
             f.write(self.token)
