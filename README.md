@@ -1,4 +1,4 @@
-# Library for interacting with Synack API test
+# Library for interacting with Synack API 
 This is a library and set of scripts that make SRT life a little easier when interacting with the platform from a linux commandline.
 * Connect to platform
   * Stay connected to the platform
