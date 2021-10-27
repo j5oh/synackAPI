@@ -628,11 +628,21 @@ class synack:
         csrf_token = m.group(1)
         self.webheaders['X-CSRF-Token'] = csrf_token
 
+        # fix broken Incapsula cookies
+        for cookie_name in self.session.cookies.iterkeys():
+            cookie_value = self.session.cookies.get(cookie_name)
+            if cookie_value.find("\r") > -1 or cookie_value.find("\n") > -1:
+                print("Fixing cookie %s" % cookie_name)
+                cookie_value = re.sub("\r\n *","", cookie_value)
+                cookie_obj = requests.cookies.create_cookie(name=cookie_name,value=cookie_value,path="/")
+                self.session.cookies.clear(domain="login.synack.com",path="/",name=cookie_name)
+                self.session.cookies.set_cookie(cookie_obj)
+
         data={"email":self.email,"password":self.password}
         response = self.try_requests("POST", "https://login.synack.com/api/authenticate", 1, data)
         jsonResponse = response.json()
         if not jsonResponse['success']:
-            print("Error logging in: "+jsonResponse)
+            print("Error logging in: "+jsonResponse["error"])
             return False
         
         progress_token = jsonResponse['progress_token']
