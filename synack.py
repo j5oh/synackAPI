@@ -229,16 +229,19 @@ class synack:
 ########################################
 ## Returns a list of web or host target codenames
 ## that are (mission only / not mission only)
-## category: web || host || RE || mobile || sourceCode || harware
+## category: web || host || RE || mobile || sourceCode || hardware
 ## mission_only: True || False
 ########################################
     def getCodenames(self, category, mission_only=False):
+        categories = ("web application", "re", "mobile", "host", "source code","hardware")
         if category.lower() == "web":
             category = "web application"
         if category.lower() == "re":
             category = "reverse engineering"
-        if category.lower() == "sourceCode":
+        if category.lower() == "sourcecode":
             category = "source code"
+        if category not in categories:
+            raise Exception("Invalid category.")
         targets = []
         for i in range (len(self.jsonResponse)):
             if mission_only == True:
