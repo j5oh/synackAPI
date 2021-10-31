@@ -15,12 +15,15 @@ This is a library and set of scripts that make SRT life a little easier when int
 * Enable mission-claiming bots
 * Manage notifications
 
-# Acknowledgement
-Thank you Malcolm and Nicolas for helping out!
+# Acknowledgements
+Thank you Malcolm, Nicolas, and pmnh for making this better!
 
 # Configuration requirements 
 ## Operating System
 This has been developed on Linux. I have no idea if it will work on Windows. It might, but your mileage may vary. I do not use windows. If you do, and you want to test, please do. 
+
+## Configuration Directories
+The required directory is `~/.synack`.
 
 ## synack.conf
 This is a required config file, and is expected to be in the directory ~/.synack/
@@ -74,6 +77,10 @@ This method creates an object that can be used to interact with the LP/LP+ platf
 
 ## connectToPlatform()
 This method takes connects to the Synack platform and writes the session token to disk. It also stays connected by auto-clicking the alert.
+### geckodriver
+This method only been tested with geckodriver/Firefox. Chrome has not been tested. 
+#### SSL Certificates
+This method will create the directory `~/.synack/selenium.profile`. The first time connecting to the SRT Platform, you will be asked to install the cacert.crt file. This allows the cert to be permanently stored and used with geckodriver.
 ### Options
 ```
 # Push all synack.py traffic through proxy
