@@ -14,6 +14,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import configparser
 import time
 import pyotp
@@ -43,6 +44,7 @@ class synack:
         self.url_notification_api = "https://notifications.synack.com/api/v2/"
         self.webheaders = {}
         self.configFile = str(Path.home())+"/.synack/synack.conf"
+        self.firefoxProfile = str(Path.home())+"/.synack/selenium.profile"
         self.config = configparser.ConfigParser()
         self.config.read(self.configFile)
         self.email = self.config['DEFAULT']['email']
@@ -665,12 +667,21 @@ class synack:
 
 
     def connectToPlatformGecko(self):
+        isExist = os.path.exists(self.firefoxProfile)
+        if not isExist:
+            os.makedirs(self.firefoxProfile)
         options = Options()
+        options.add_argument("-profile")
+        options.add_argument(self.firefoxProfile)
+        firefox_capabilities = DesiredCapabilities.FIREFOX
+        firefox_capabilities['marionette'] = True
+
         if self.headless == True:
             options.headless = True
         else:
             options.headless = False
-        driver = webdriver.Firefox(options=options)
+#        driver = webdriver.Firefox(options=options)
+        driver = webdriver.Firefox(capabilities=firefox_capabilities, options=options)
         driver.get(self.login_url)
         assert "Synack" in driver.title
 ## Fill in the email address ##
