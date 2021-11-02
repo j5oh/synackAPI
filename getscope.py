@@ -35,10 +35,13 @@ else:
     codenames = [arg_1]
     category = s1.getCategory(codenames[0])
 
-# def enumerateSubdomains(netloc):
-#     Stuff in here
+
+#def enumerateSubdomains(hostname):
+#    hostnames = do stuff here
+#    return(hostnames)
 
 scope = ()
+
 if category == "Host":
     for i in range(len(codenames)):
         codename = codenames[i]
@@ -59,8 +62,10 @@ if category == "Web Application":
     for i in range(len(codenames)):
         print(codenames[i])
         tupleList = set()
+        burpSet = set()
         codename = codenames[i]
         scope = s1.getScope(codename)
+        wildcardRegex = "(.*\.|)"
         for j in range(len(scope)):
             scheme = scope[j]['scheme']
             netloc = scope[j]['netloc']
@@ -69,13 +74,18 @@ if category == "Web Application":
             wildcard = scope[j]['wildcard']
             tupleList.add(netloc)
             if wildcard == True:
-# You can add a subdomain enumeration call here...
-# I did. :)
-#                subdomains = enumerateSubdomains(netloc)
+#                enumURLs = enumerateSubdomains(netloc)
+#                subdomains = [string for string in enumURLs if netloc in string]
+#                for k in range(len(subdomains)):
+#                    tupleList.add(subdomains[k])
                 tupleList.add(netloc)
+                burpStr = netloc.replace('.','\.')
+                burpset.add(wildcardRegex + burpStr)
             else:
                 tupleList.add(netloc)
+                burpSet.add(netloc.replace('.','\.'))
         scopeList = list(tupleList)
+        burpList = list(burpSet)
         targetPath = "./"+codename.upper()+"/"
         if os.path.isdir(targetPath) == False:
             os.mkdir(targetPath)
@@ -84,4 +94,7 @@ if category == "Web Application":
             os.remove(filePath)
         with open('./'+codename.upper()+'/scope.txt', mode='wt', encoding='utf-8') as myfile:
             myfile.write('\n'.join(scopeList))
+            myfile.write('\n')
+        with open('./'+codename.upper()+'/burpScope.txt', mode='wt', encoding='utf-8') as myfile:
+            myfile.write('\n'.join(burpList))
             myfile.write('\n')
