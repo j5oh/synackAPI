@@ -79,7 +79,7 @@ class synack:
                 self.token = f.readline()
             f.close()
         else:
-            raise IOError('No Synack token. Run the keepalive script.')
+            self.connectToPlatform()
         self.webheaders = {"Authorization": "Bearer " + self.token}
         response = self.try_requests("GET", self.url_profile, 10)
         profile = response.json()
