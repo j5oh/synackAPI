@@ -80,7 +80,7 @@ if category == "Web Application":
 #                    tupleList.add(subdomains[k])
                 tupleList.add(netloc)
                 burpStr = netloc.replace('.','\.')
-                burpset.add(wildcardRegex + burpStr)
+                burpSet.add(wildcardRegex + burpStr)
             else:
                 tupleList.add(netloc)
                 burpSet.add(netloc.replace('.','\.'))
