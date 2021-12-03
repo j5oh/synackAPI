@@ -8,6 +8,7 @@ from pathlib import Path
 import warnings
 import operator
 import sys
+import datetime
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -42,6 +43,7 @@ class synack:
         self.url_logout = "https://platform.synack.com/api/logout"
         self.url_notification_token = "https://platform.synack.com/api/users/notifications_token"
         self.url_notification_api = "https://notifications.synack.com/api/v2/"
+        self.url_transactions = "https://platform.synack.com/api/transactions"
         self.webheaders = {}
         self.configFile = str(Path.home())+"/.synack/synack.conf"
         self.firefoxProfile = str(Path.home())+"/.synack/selenium.profile"
@@ -885,3 +887,32 @@ class synack:
             for i in range(len(jsonResponse['roes'])):
                 roes.append(jsonResponse['roes'][i])
             return(roes)
+
+######################
+## Get Transactions ##
+######################
+    def getTransactions(self):
+        pageIterator=1
+        breakOuterLoop = 0
+        transactions = []
+        while True:
+            transactionUrl = self.url_transactions+"?page="+str(pageIterator)+"&per_page=15"
+            response = self.try_requests("GET", transactionUrl, 10)
+            try:
+                jsonResponse = response.json()
+            except:
+                return(1)
+            if not jsonResponse:
+                break
+            for i in range(len(jsonResponse)):
+                if jsonResponse[i]["title"] == "CashOut":
+                    if float(jsonResponse[i]['amount']) < 0:
+                        amount = float(jsonResponse[i]['amount']) * -1
+                    else:
+                        amount = float(jsonResponse[i]['amount'])
+                    ts = datetime.datetime.fromtimestamp(jsonResponse[i]['created_at'])
+                    transactions.append(ts.strftime('%Y-%m-%d')+","+str(amount))
+            pageIterator=pageIterator+1
+        return(transactions)
+
+
