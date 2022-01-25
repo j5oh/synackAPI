@@ -389,7 +389,7 @@ class synack:
                     j+=1
             return(list(allRules))
         if category.lower() == "host":
-            scopeURL = "https://platform.synack.com/api/targets/"+slug+"/cidrs"
+            scopeURL = "https://platform.synack.com/api/targets/"+slug+"/cidrs?page=all"
             cidrs = []
             x = 1
             try:
@@ -398,14 +398,14 @@ class synack:
                 raise SystemExit(e)
             temp = json.dumps(response.json()['cidrs']).replace("[","").replace("]","").replace("\"","").replace(", ","\n").split("\n")
             cidrs.extend(temp)
-            while len(temp) > 1:
-                x += 1
-                response = self.try_requests("GET", scopeURL, 10, x)
-                if (response.json().get("cidrs")==None):
-                    break
-                else:
-                    temp = json.dumps(response.json()['cidrs']).replace("[","").replace("]","").replace("\"","").replace(", ","\n").split("\n")
-                    cidrs.extend(temp)
+#            while len(temp) > 1:
+#                x += 1
+#                response = self.try_requests("GET", scopeURL, 10, x)
+#                if (response.json().get("cidrs")==None):
+#                    break
+#                else:
+#                    temp = json.dumps(response.json()['cidrs']).replace("[","").replace("]","").replace("\"","").replace(", ","\n").split("\n")
+#                    cidrs.extend(temp)
             cidrs = list(set(cidrs))
             return(cidrs)
 
