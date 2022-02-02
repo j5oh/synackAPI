@@ -332,17 +332,15 @@ class synack:
         if category.lower() == "web application":
             scopeURL = "https://platform.synack.com/api/asset/v1/organizations/"+orgID+"/owners/listings/"+slug+"/webapps"
             allRules = []
+            oosRules = []
             response = self.try_requests("GET", scopeURL, 10)
             jsonResponse = response.json()
             j = 0
             while j < len(jsonResponse):
                 if jsonResponse[j]['status'] == "out":
-                    j+=1
-                    continue
-                else:
-                    tmpSet = set(self.findkeys(jsonResponse[j], 'rule'))
-                    for thisURL in tmpSet:
-                        url = urlparse(thisURL)
+                    tmpOOS = set()
+                    for thisRule in range(len(jsonResponse[j]['rules'])):
+                        url = urlparse(jsonResponse[j]['rules'][thisRule]['rule'])
                         scheme = url.scheme
                         netloc = url.netloc
                         path   = url.path
@@ -377,6 +375,70 @@ class synack:
                                 path = "/" + "/".join(path.split('/')[1:])
                             else:
                                 continue
+                        oosDict = {
+                                        'scheme' : scheme,
+                                        'netloc': netloc,
+                                        'path': path,
+                                        'port': port,
+                                        'wildcard': wildcard,
+                                        'fullURI' : scheme+netloc
+
+                        }
+                    oosRules.append(oosDict)            
+                    j+=1
+                else:
+                    for thisRule in range(len(jsonResponse[j]['rules'])):
+                        url = urlparse(jsonResponse[j]['rules'][thisRule]['rule'])
+                        scheme = url.scheme
+                        netloc = url.netloc
+                        path   = url.path
+                        port   = url.port
+                        wildcard = False
+
+                        if len(netloc) != 0:
+                            subdomain = netloc.split('.')[0]
+                            if subdomain == "*":
+                                wildcard = True
+                                netloc = ".".join(netloc.split('.')[1:])
+                        else:
+                            if len(path) != 0:
+                                netloc = path.split('/')[0]
+                                checkWildcard = netloc.split('.')[0]
+                                if checkWildcard == "*":
+                                    wildcard = True
+                                    if ":" in netloc:
+                                        port = netloc.split(':')[1]
+                                        thisURL = netloc.split(':')[0]
+                                        netloc = ".".join(thisURL.split('.')[1:])
+                                    else:
+                                        port = 443
+                                        netloc = ".".join(netloc.split('.')[1:])
+                                else:
+                                    if ":" in netloc:
+                                        port = netloc.split(':')[1]
+                                        thisURL = netloc.split(':')[0]
+                                        netloc = ".".join(thisURL.split('.')[0:])
+                                    else:
+                                        port = 443
+                                        netloc = ".".join(netloc.split('.')[0:])
+                                path = "/" + "/".join(path.split('/')[1:])
+                            else:
+                                continue
+                        if jsonResponse[j]['rules'][thisRule]['status'] == "out":
+                            oosDict = {
+                                        'scheme' : scheme,
+                                        'netloc': netloc,
+                                        'path': path,
+                                        'port': port,
+                                        'wildcard': wildcard,
+                                        'fullURI' : scheme+netloc
+
+                            }
+                            oosRules.append(oosDict)
+                            continue
+                        else:
+                            pass
+
                         scopeDict = {
                                         'scheme' : scheme,
                                         'netloc': netloc,
@@ -387,7 +449,7 @@ class synack:
                                     }
                     allRules.append(scopeDict)
                     j+=1
-            return(list(allRules))
+            return(list(allRules),list(oosRules))
         if category.lower() == "host":
             scopeURL = "https://platform.synack.com/api/targets/"+slug+"/cidrs?page=all"
             cidrs = []

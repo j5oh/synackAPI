@@ -7,7 +7,8 @@ import os
 import sys
 
 s1 = synack()
-#s1.Proxy = True
+s1.Proxy = True
+s1.gecko=True
 s1.getSessionToken()
 s1.getAllTargets()
 args = len(sys.argv)
@@ -36,12 +37,6 @@ else:
     category = s1.getCategory(codenames[0])
 
 
-#def enumerateSubdomains(hostname):
-#    hostnames = do stuff here
-#    return(hostnames)
-
-scope = ()
-
 if category == "Host":
     for i in range(len(codenames)):
         codename = codenames[i]
@@ -62,10 +57,14 @@ if category == "Web Application":
     for i in range(len(codenames)):
         print(codenames[i])
         tupleList = set()
+        oosTupleList = set()
         burpSet = set()
+        oosBurpSet = set()
         codename = codenames[i]
-        scope = s1.getScope(codename)
+        scope,oos = s1.getScope(codename)
+
         wildcardRegex = "(.*\.|)"
+
         for j in range(len(scope)):
             scheme = scope[j]['scheme']
             netloc = scope[j]['netloc']
@@ -74,18 +73,30 @@ if category == "Web Application":
             wildcard = scope[j]['wildcard']
             tupleList.add(netloc)
             if wildcard == True:
-#                enumURLs = enumerateSubdomains(netloc)
-#                subdomains = [string for string in enumURLs if netloc in string]
-#                for k in range(len(subdomains)):
-#                    tupleList.add(subdomains[k])
                 tupleList.add(netloc)
                 burpStr = netloc.replace('.','\.')
                 burpSet.add(wildcardRegex + burpStr)
             else:
                 tupleList.add(netloc)
                 burpSet.add(netloc.replace('.','\.'))
+
+        for k in range(len(oos)):
+            scheme = oos[k]['scheme']
+            netloc = oos[k]['netloc']
+            path = oos[k]['netloc']
+            port = oos[k]['port']
+            wildcard = oos[k]['wildcard']
+            oosTupleList.add(netloc)
+            if wildcard == True:
+                oosTupleList.add(netloc)
+                oosBurpStr = netloc.replace('.','\.')
+                oosBurpSet.add(wildcardRegex + oosBurpStr)
+            else:
+                oosTupleList.add(netloc)
+                oosBurpSet.add(netloc.replace('.','\.'))
         scopeList = list(tupleList)
         burpList = list(burpSet)
+        oosBurpList = list(oosBurpSet)
         targetPath = "./"+codename.upper()+"/"
         if os.path.isdir(targetPath) == False:
             os.mkdir(targetPath)
@@ -97,4 +108,7 @@ if category == "Web Application":
             myfile.write('\n')
         with open('./'+codename.upper()+'/burpScope.txt', mode='wt', encoding='utf-8') as myfile:
             myfile.write('\n'.join(burpList))
+            myfile.write('\n')
+        with open('./'+codename.upper()+'/burpOOS.txt', mode='wt', encoding='utf-8') as myfile:
+            myfile.write('\n'.join(oosBurpList))
             myfile.write('\n')
