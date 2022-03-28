@@ -7,8 +7,7 @@ import os
 import sys
 
 s1 = synack()
-s1.Proxy = True
-s1.gecko=True
+s1.gecko=False
 s1.getSessionToken()
 s1.getAllTargets()
 args = len(sys.argv)
