@@ -822,7 +822,7 @@ class synack:
 ####################
 ## CLAIM MISSIONS ##
 ####################
-    def claimMission(self, missionJson):
+    def claimMission(self, missionJson, dontclaim, assetType):
         dollarValue = {}
         claim = {'type': 'CLAIM'}
 ################
@@ -836,20 +836,26 @@ class synack:
         i = len(sorted_dict.keys())
         missionList = []
         for key in sorted_dict.keys():
+            target = self.getCodenameFromSlug(missionJson[key]["listing"]["id"])
+            category = self.getCategory(target)
+            if(category not in assetType):
+                continue
+            if(target in dontclaim):
+                continue
             i-= 1
             campaign = missionJson[key]["campaign"]["title"]
             campaignID = missionJson[key]["campaign"]["id"]
             orgID = missionJson[key]["organization"]["id"]
-            listingID = missionJson[key]["listing"]["id"]
+            slug = missionJson[key]["listing"]["id"]
             taskID = missionJson[key]["id"]
             payout = str(missionJson[key]["payout"]["amount"])
-            url_claimPath = "https://platform.synack.com/api/tasks/v1/organizations/" + orgID + "/listings/" + listingID + "/campaigns/" + campaignID + "/tasks/" + taskID + "/transitions"
+            url_claimPath = "https://platform.synack.com/api/tasks/v1/organizations/" + orgID + "/listings/" + slug + "/campaigns/" + campaignID + "/tasks/" + taskID + "/transitions"
             claimResponse = self.try_requests("POST", url_claimPath, 10, claim)
             if claimResponse.status_code == 201:
                 claimed = True
             else:
                 claimed = False
-            missionDict = {"target": listingID, "payout": payout, "claimed": claimed}
+            missionDict = {"target": target, "payout": payout, "claimed": claimed}
             missionList.append(missionDict)
         return(missionList)
 
