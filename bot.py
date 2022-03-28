@@ -47,6 +47,20 @@ pollSleep = 100
 ## period.                      ##
 claimSleep = 100
 
+
+## Don't claim missions on the following targets ##
+dontclaim=[]
+
+## Only claim missions on the following ##
+## target types:                        ##
+## "Web Application"                    ##
+## "Reverse Engineering"                ##
+## "Mobile"                             ##
+## "Host"                               ##
+## "Source Code"                        ##
+## "Hardware"                           ##
+assetType = []
+
 s1 = synack()
 s1.getSessionToken()
 while True:
@@ -54,5 +68,5 @@ while True:
     missionJson = s1.pollMissions()
     if len(missionJson) == 0:
         continue
-    s1.claimMission(missionJson)
+    s1.claimMission(missionJson, dontclaim, assetType)
     time.sleep(claimSleep)
