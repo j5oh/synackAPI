@@ -507,134 +507,106 @@ class synack:
             if "value" in jsonResponse:
                 for value in range(len(jsonResponse['value'])):
                     for exploitable_location in range(len(jsonResponse['value'][value]['exploitable_locations'])):
-                        try:
-                            URI = urlparse(str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['value']))
-                        except:
-                            continue
-                        scheme = URI.scheme
-                        port = str(URI.port)
-                        if port == "None":
-                            if scheme == "http":
-                                port = "80"
-                            elif scheme == "https":
-                                port = "443"
-                        if len(jsonResponse['value'][value]['categories']) == 2:
-                            analytics.append('"'
-                                +codename
-                                +'","'
-                                +str(jsonResponse['value'][value]['categories'][0])
-                                +'","'
-                                +str(jsonResponse['value'][value]['categories'][1])
-                                +'","URL","'
-                                +str(scheme)
-                                +'","'
-                                +port
-                                +'","'
-                                +str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['value'])
-                                +'","'
-                                +str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['status'])
-                                +'"'
-                            )
-                        elif len(jsonResponse['value'][value]['categories']) == 1:
-                            analytics.append('"","'
-                                +codename
-                                +'","'
-                                +str(jsonResponse['value'][value]['categories'][0])
-                                +'","'
-                                +str(jsonResponse['value'][value]['categories'][1])
-                                +'","URL","'
-                                +str(scheme)
-                                +'","'
-                                +port
-                                +'","'
-                                +str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['value'])
-                                +'","'
-                                +str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['status'])
-                                +'"'
-                            )
-                        else:
-                            next
+                        analyticsDict = {}
+                        if jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['type'] == "url":
+                            try:
+                                URI = urlparse(str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['value']))
+                                scheme = URI.scheme
+                            except:
+                                scheme = "https"
+## URL
+#                                analyticsDict['uri'] = urlparse(str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['value']))
+                            port = str(URI.port)
+                            if port != "None":
+                                analyticsDict['port'] = port
+                            else:
+                                if scheme == "http":
+                                    analyticsDict['port'] = "80"
+                                elif scheme == "https":
+                                    analyticsDict['port'] = "443"
+                            analyticsDict['codename'] = codename
+                            analyticsDict['vuln_category'] = str(jsonResponse['value'][value]['categories'][0])
+                            if len(jsonResponse['value'][value]['categories']) == 2:
+                                analyticsDict['vuln_subcategory'] = str(jsonResponse['value'][value]['categories'][1])
+                            else:
+                                pass
+                            analyticsDict['scheme'] = "URL"
+                            try:
+                                analyticsDict['protocol'] = URI.scheme
+                            except:
+                                analyticsDict['protocol'] = "http"
+                                pass
+                            try:
+                                analyticsDict['vuln_location'] = URI.path
+                            except:
+                                analyticsDict['vuln_location'] = ""
+                                pass
+                            if status.lower() == "rejected":
+                                analyticsDict['status'] = "rejected"
+                            else:
+                                analyticsDict['status'] = str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['status'])
+                            analytics.append(analyticsDict)
             return analytics
         elif targetType == "Host":
+#'codename', 'vuln_category', 'vuln_subcategory', 'vuln_location', 'type', 'protocol', 'port', 'path', 'status'
             if "value" in jsonResponse:
                 for value in range(len(jsonResponse['value'])):
                     for exploitable_location in range(len(jsonResponse['value'][value]['exploitable_locations'])):
-                        if len(jsonResponse['value'][value]['categories']) == 2:
-                            if jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['type'] == "url":
+                        analyticsDict = {}
+                        if jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['type'] == "url":
+                            try:
                                 URI = urlparse(str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['value']))
                                 scheme = URI.scheme
-                                port = str(URI.port)
-                                if port == "None":
-                                    if scheme == "http":
-                                        port = "80"
-                                    elif scheme == "https":
-                                        port = "443"
-                                analytics.append('"'
-                                    +codename
-                                    +'","'
-                                    +str(jsonResponse['value'][value]['categories'][0])
-                                    +'","'
-                                    +str(jsonResponse['value'][value]['categories'][1])
-                                    +'","URL","'
-                                    +str(scheme)
-                                    +'","'
-                                    +port
-                                    +'","'
-                                    +str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['value'])
-                                    +'","'
-                                    +str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['status'])
-                                    +'"'
-                                    )
-                            elif jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['type'] == "ip":
-                                analytics.append('"'
-                                    +codename
-                                    +'","'
-                                    +str(jsonResponse['value'][value]['categories'][0])
-                                    +'","'
-                                    +str(jsonResponse['value'][value]['categories'][1])
-                                    +'","HOST","'
-                                    +str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['protocol'])
-                                    +'","'
-                                    +str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['port'])
-                                    +'","'
-                                    +str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['address'])
-                                    +'","'
-                                    +str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['status'])
-                                    +'"'
-                                    )
-                        elif len(jsonResponse['value'][value]['categories']) == 1:
-                            if jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['type'] == "url":
-                                analytics.append('"","'
-                                    +codename
-                                    +'","'
-                                    +str(jsonResponse['value'][value]['categories'][0])
-                                    +'","URL","'
-                                    +str(scheme)
-                                    +'","'
-                                    +str(port)
-                                    +'","'
-                                    +str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['value'])
-                                    +'","'
-                                    +str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['status'])
-                                    +'"'
-                                    )
-                            elif jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['type'] == "ip":
-                                analytics.append('"","'
-                                    +codename
-                                    +'","'
-                                    +str(jsonResponse['value'][value]['categories'][0])
-                                    +'","HOST","'
-                                    +str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['protocol'])
-                                    +'","'
-                                    +str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['port'])
-                                    +'","'
-                                    +str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['address'])
-                                    +'","'
-                                    +str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['status'])
-                                    +'"'
-                                    )
-                        else:
-                            next
+                            except:
+                                scheme = "https"
+## URL
+#                                analyticsDict['uri'] = urlparse(str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['value']))
+                            port = str(URI.port)
+                            if port != "None":
+                                analyticsDict['port'] = port
+                            else:
+                                if scheme == "http":
+                                    analyticsDict['port'] = "80"
+                                elif scheme == "https":
+                                    analyticsDict['port'] = "443"
+                            analyticsDict['codename'] = codename
+                            analyticsDict['vuln_category'] = str(jsonResponse['value'][value]['categories'][0])
+                            if len(jsonResponse['value'][value]['categories']) == 2:
+                                analyticsDict['vuln_subcategory'] = str(jsonResponse['value'][value]['categories'][1])
+                            else:
+                                pass
+                            analyticsDict['scheme'] = "URL"
+                            try:
+                                analyticsDict['protocol'] = URI.scheme
+                            except:
+                                analyticsDict['protocol'] = "http"
+                                pass
+                            try:
+                                analyticsDict['vuln_location'] = URI.path
+                            except:
+                                analyticsDict['vuln_location'] = ""
+                                pass
+                            if status.lower() == "rejected":
+                                analyticsDict['status'] = "rejected"
+                            else:
+                                analyticsDict['status'] = str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['status'])
+                            analytics.append(analyticsDict)
+                        elif jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['type'] == "ip":
+## IP
+                            analyticsDict['codename'] = codename
+                            analyticsDict['vuln_category'] = str(jsonResponse['value'][value]['categories'][0])
+                            if len(jsonResponse['value'][value]['categories']) == 2:
+                                analyticsDict['vuln_subcategory'] = str(jsonResponse['value'][value]['categories'][1])
+                            else:
+                                pass
+                            analyticsDict['scheme'] = "HOST"
+                            analyticsDict['protocol'] = str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['protocol'])
+                            analyticsDict['port'] = str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['port'])
+                            if status.lower() == "rejected":
+                                analyticsDict['status'] = "rejected"
+                            else:
+                                analyticsDict['status'] = str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['status'])
+                            analytics.append(analyticsDict)
             return analytics
 
 #############################################
