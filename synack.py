@@ -357,7 +357,7 @@ class synack:
             jsonResponse = response.json()
             j = 0
             while j < len(jsonResponse):
-                if jsonResponse[j]['status'] == "out":
+                if jsonResponse[j]['status'] in ["out","tbd"]:
                     tmpOOS = set()
                     for thisRule in range(len(jsonResponse[j]['rules'])):
                         url = urlparse(jsonResponse[j]['rules'][thisRule]['rule'])
@@ -444,7 +444,7 @@ class synack:
                                 path = "/" + "/".join(path.split('/')[1:])
                             else:
                                 continue
-                        if jsonResponse[j]['rules'][thisRule]['status'] == "out":
+                        if jsonResponse[j]['rules'][thisRule]['status'] in ["out","tbd"]:
                             oosDict = {
                                         'scheme' : scheme,
                                         'netloc': netloc,
