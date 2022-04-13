@@ -35,6 +35,8 @@ class synack:
         self.url_scope_summary = "https://platform.synack.com/api/targets/"
         self.url_activate_target = "https://platform.synack.com/api/launchpoint"
         self.url_assessments = "https://platform.synack.com/api/assessments"
+        self.url_vulnerabilities = "https://platform.synack.com/api/vulnerabilities"
+        self.url_drafts = "https://platform.synack.com/api/drafts"
         self.url_unregistered_slugs = "https://platform.synack.com/api/targets?filter%5Bprimary%5D=unregistered&filter%5Bsecondary%5D=all&filter%5Bcategory%5D=all&sorting%5Bfield%5D=dateUpdated&sorting%5Bdirection%5D=desc&pagination%5Bpage%5D="
         self.url_profile = "https://platform.synack.com/api/profiles/me"
         self.url_analytics = "https://platform.synack.com/api/listing_analytics/categories?listing_id="
@@ -143,7 +145,15 @@ class synack:
                         else:
                             return response
                     elif func == "PATCH":
-                        response = self.session.patch(URL, headers=self.webheaders, proxies=proxyDict, json=extra, verify=False)
+                        # PATCH request does not support `json=` parameter
+                        response = self.session.patch(URL, headers=self.webheaders, proxies=proxyDict, data=extra, verify=False)
+                        if response.status_code == 401 and platform in netloc:
+                            self.connectToPlatform()
+                            self.getSessionToken()
+                        else:
+                            return response
+                    elif func == "DELETE":
+                        response = self.session.delete(URL, headers=self.webheaders, proxies=proxyDict, json=extra, verify=False)
                         if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
@@ -189,7 +199,17 @@ class synack:
                         else:
                             return response
                     elif func == "PATCH":
-                        response = self.session.patch(URL, headers=self.webheaders, json=extra, verify=False)
+                        # PATCH request does not support `json=` parameter
+                        newHeaders = dict(self.webheaders)
+                        newHeaders['Content-Type'] = "application/json"
+                        response = self.session.request("PATCH", URL, headers=newHeaders, data=extra, verify=False)
+                        if response.status_code == 401 and platform in netloc:
+                            self.connectToPlatform()
+                            self.getSessionToken()
+                        else:
+                            return response
+                    elif func == "DELETE":
+                        response = self.session.delete(URL, headers=self.webheaders, json=extra, verify=False)
                         if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
@@ -753,6 +773,57 @@ class synack:
         if self.connector == True:
             self.webdriver = driver
         return(0)
+
+###########
+## Vulns ##
+###########
+
+    def getVulns(self, status="accepted"):
+        pageNum = 1
+        results = []
+        while True:
+            url_vulnerabilities = self.url_vulnerabilities +"?filters%5Bstatus%5D=" + status + "&page=" +str(pageNum)+"&per_page=5"
+            response = self.try_requests("GET", url_vulnerabilities, 10)
+            vulnsResponse = response.json()
+            if len(vulnsResponse) == 0:
+                break
+            else:
+                results = results + vulnsResponse
+                pageNum += 1
+        return results
+
+    def getVuln(self, identifier): # e.g. optimusant-4
+        url_vuln = self.url_vulnerabilities + "/" + identifier
+        response = self.try_requests("GET", url_vuln, 10)
+        vuln_response = response.json()
+        return vuln_response
+
+###########
+## Drafts ##
+###########
+
+    def getDrafts(self):
+        pageNum = 1
+        results = []
+        while True:
+            url_drafts = self.url_drafts +"?page=" +str(pageNum)+"&per_page=5"
+            response = self.try_requests("GET", url_drafts, 10)
+            draftsResponse = response.json()
+            if len(draftsResponse) == 0:
+                break
+            else:
+                results = results + draftsResponse
+                pageNum += 1
+        return results
+
+    def deleteDraft(self, id):
+        # careful!!
+        url_delete = self.url_drafts + "/" + str(id)
+        response = self.try_requests("DELETE", url_delete, 1)
+        if response.status_code == 200:
+            return True
+        else:
+            return False
 
 ###########
 ## Hydra ##
