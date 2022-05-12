@@ -36,4 +36,4 @@ COPY ./ .
 RUN bash -c "cd /synackAPI && pip install -e ."
 
 # command to run on container start
-CMD [ "python3", "/synackAPI/examples/polling.py" ]
+CMD [ "synack", "polling" ]

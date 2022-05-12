@@ -17,5 +17,10 @@ setup(
         'urllib3',
         'psycopg2-binary',
     ],
+    entry_points={
+        'console_scripts': [
+            'synack = synack.__main__:main'
+        ]
+    }
 )
 
