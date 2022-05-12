@@ -24,8 +24,8 @@ def main():
     scripts = get_tools()
     if sys.argv[1] in scripts:
         sys.argv = sys.argv[1:]
-        import importlib
-        importlib.import_module('synack.tools.' + sys.argv[0])
+        import runpy
+        runpy.run_module('synack.tools.' + sys.argv[0], run_name='__main__')
     else:
         print("Tool \"%s\" not found!" % sys.argv[1])
         print_usage()
