@@ -24,7 +24,6 @@ from urllib.parse import urlparse
 warnings.filterwarnings("ignore")
 
 class synack:
-    codename = None
     def __init__(self):
         self.session = requests.Session()
         self.jsonResponse = []
