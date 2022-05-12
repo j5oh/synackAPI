@@ -55,6 +55,12 @@ webhook_url = https://hooks.slack.com/services/...
 * session_token_path (default /tmp/synacktoken) - location to store synack token
 * notification_token_path (default /tmp/notificationtoken) - location to store notification token
 
+## Python module
+This can be installed as a python module named `synack` for easy integration with other python code. To install, you can enter the SynackAPI directory and run the following:
+```
+pip3 install -e .
+```
+
 ## requirements.txt
 Your best bet to have all required python3 modules is to run `pip3 install -r requirements.txt`. I cannot help troubleshoot any other modules.
 
