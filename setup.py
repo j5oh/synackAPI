@@ -16,6 +16,7 @@ setup(
         'selenium',
         'urllib3',
         'psycopg2-binary',
+        'cmd2',
     ],
     entry_points={
         'console_scripts': [
