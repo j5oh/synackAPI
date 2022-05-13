@@ -557,7 +557,7 @@ class synack:
                                 analyticsDict['protocol'] = "http"
                                 pass
                             try:
-                                analyticsDict['vuln_location'] = URI.path
+                                analyticsDict['vuln_location'] = analyticsDict['protocol'] + "://" + URI.netloc + URI.path
                             except:
                                 analyticsDict['vuln_location'] = ""
                                 pass
@@ -602,7 +602,7 @@ class synack:
                                 analyticsDict['protocol'] = "http"
                                 pass
                             try:
-                                analyticsDict['vuln_location'] = URI.path
+                                analyticsDict['vuln_location'] = analyticsDict['protocol'] + "://" + URI.netloc + URI.path
                             except:
                                 analyticsDict['vuln_location'] = ""
                                 pass
@@ -621,6 +621,7 @@ class synack:
                                 pass
                             analyticsDict['scheme'] = "HOST"
                             analyticsDict['protocol'] = str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['protocol'])
+                            analyticsDict['vuln_location'] = str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['address'])
                             analyticsDict['port'] = str(jsonResponse['value'][value]['exploitable_locations'][exploitable_location]['port'])
                             if status.lower() == "rejected":
                                 analyticsDict['status'] = "rejected"
