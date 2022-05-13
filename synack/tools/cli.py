@@ -250,9 +250,8 @@ class SynackCLI(cmd2.Cmd):
         """
         Poll for new notifications
         """
-        #TODO: parse this to look pretty
-        result = self.s1.pollNotifications()
-        print(result)
+        for notification in self.s1.pollNotifications():
+            print("    " + notification["created_at"] + " " + notification["action"] + " " + notification["subject"])
         
     def do_current_target(self, args):
         """
