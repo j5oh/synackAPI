@@ -89,7 +89,7 @@ class SynackCLI(cmd2.Cmd):
     @cmd2.with_argparser(codename_parser)
     def do_scope(self, args):
         """
-        Retrieve the scope of a target by its codename
+        Get the scope of a target by its codename
         """
         self._get_all_targets()
         #TODO: parse this to look pretty
@@ -98,7 +98,7 @@ class SynackCLI(cmd2.Cmd):
         
     def do_assessments(self, args):
         """
-        Retrieve the list of your passed assessments
+        Get the list of your passed assessments
         """
         self.s1.getAssessments()
         print("    " + "\n    ".join(self.s1.assessments))
@@ -110,7 +110,7 @@ class SynackCLI(cmd2.Cmd):
     @cmd2.with_argparser(analytics_parser)
     def do_analytics(self, args):
         """
-        Retrieve the analytics from a target by its codename
+        Get the analytics from a target by its codename
         """
         self._get_all_targets()
         #TODO: parse this to look pretty
@@ -135,7 +135,7 @@ class SynackCLI(cmd2.Cmd):
     @cmd2.with_argparser(vulns_parser)
     def do_vulns(self, args):
         """
-        Retrieve a list of your vulns
+        Get a list of your vulns
         """
         for vuln in self.s1.getVulns(status=args.status):
             vuln_info = "    [" + vuln["id"] + "] " + vuln["title"] + " (" + vuln["state"] + ")"
@@ -149,14 +149,14 @@ class SynackCLI(cmd2.Cmd):
     @cmd2.with_argparser(vuln_parser)
     def do_vuln(self, args):
         """
-        Retrieve a vulnerability report
+        Get a vulnerability report
         """
         #TODO: parse this to look pretty
         print(self.s1.getVuln(args.id))
         
     def do_drafts(self, args):
         """
-        Retrieve a list of your draft vuln reports
+        Get a list of your draft vuln reports
         """
         for vuln in self.s1.getDrafts():
             print("    " + str(vuln["id"]) + " [" + vuln["listing"]["codename"] + "] " + vuln["vulnerability_blob"]["title"])
@@ -177,7 +177,7 @@ class SynackCLI(cmd2.Cmd):
     @cmd2.with_argparser(codename_parser)
     def do_hydra(self, args):
         """
-        Retrieve the hydra listings of a target by its codename
+        Get the hydra listings of a target by its codename
         """
         self._get_all_targets()
         #TODO: parse this to look pretty
@@ -211,7 +211,7 @@ class SynackCLI(cmd2.Cmd):
                 
     def do_notification_token(self, args):
         """
-        Retrieve the notification token
+        Get the notification token
         """
         self.s1.getNotificationToken()
         print("    %s" % self.s1.notificationToken)
@@ -235,7 +235,7 @@ class SynackCLI(cmd2.Cmd):
         
     def do_current_target(self, args):
         """
-        Retrieve the currently selected target
+        Get the currently selected target
         """
         self._get_all_targets()
         slug = self.s1.getCurrentTargetSlug()
@@ -247,7 +247,7 @@ class SynackCLI(cmd2.Cmd):
     @cmd2.with_argparser(codename_parser)
     def do_roes(self, args):
         """
-        Retrieve the ROEs of a target by its codename
+        Get the ROEs of a target by its codename
         """
         self._get_all_targets()
         slug = self.s1.getTargetID(args.codename)
@@ -257,7 +257,7 @@ class SynackCLI(cmd2.Cmd):
         
     def do_transactions(self, args):
         """
-        Retrieve the list of transactions
+        Get the list of transactions
         """
         payouts = self.s1.getTransactions()
         for payout in payouts:

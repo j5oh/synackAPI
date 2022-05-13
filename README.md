@@ -80,7 +80,7 @@ s1.getAllTargets()
 ```
 
 # Console command
-Once installed as a python module, you can use `synack` as a console command, specifying the name of a script in the `tools` directory. For example, to find the current target, you can run `synack currentTarget`.
+Once installed as a python module, you can use `synack` as a console command, specifying the name of a script in the `tools` directory. For example, to find the current target, you can run `synack currentTarget`. A CLI is available which wraps around most of the `synack` class functions, if you run `synack cli`.
 
 ## synack()
 This method creates an object that can be used to interact with the LP/LP+ platform.
