@@ -95,6 +95,12 @@ class SynackCLI(cmd2.Cmd):
         self._get_all_targets()
         print("    Status Code: %d" % self.s1.connectToTarget(args.codename))
         
+    def do_disconnect_target(self, args):
+        """
+        Disconnect from the target
+        """
+        print("    Status Code: %d" % self.s1.disconnectTarget())
+        
     scope_parser = cmd2.Cmd2ArgumentParser()
     scope_parser.add_argument('codename', type=str, help='Target codename')
         

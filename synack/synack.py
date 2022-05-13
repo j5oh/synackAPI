@@ -330,6 +330,14 @@ class synack:
         response = self.try_requests("PUT", self.url_activate_target, 10, slug)
         time.sleep(5)
         return response.status_code
+        
+#####################################################
+## This will disconnect you from the target        ##
+#####################################################
+    def disconnectTarget(self):
+        response = self.try_requests("PUT", self.url_activate_target, 10, "")
+        time.sleep(5)
+        return response.status_code
 
 ########################################################
 ## This just returns the "real" client name sometimes ##
