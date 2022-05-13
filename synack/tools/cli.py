@@ -40,10 +40,10 @@ class SynackCLI(cmd2.Cmd):
         codenames = self.s1.getCodenames(args.category, mission_only=args.mission_only)
         print("    " + "\n    ".join(codenames))
             
-    codename_parser = cmd2.Cmd2ArgumentParser()
-    codename_parser.add_argument('codename', type=str, help='Target codename')
+    target_id_parser = cmd2.Cmd2ArgumentParser()
+    target_id_parser.add_argument('codename', type=str, help='Target codename')
     
-    @cmd2.with_argparser(codename_parser)
+    @cmd2.with_argparser(target_id_parser)
     def do_target_id(self, args):
         """
         Get the slug ID of a target from its codename
@@ -61,8 +61,11 @@ class SynackCLI(cmd2.Cmd):
         """
         self._get_all_targets()
         print("    " + self.s1.getCodenameFromSlug(args.slug))
+        
+    category_parser = cmd2.Cmd2ArgumentParser()
+    category_parser.add_argument('codename', type=str, help='Target codename')
             
-    @cmd2.with_argparser(codename_parser)
+    @cmd2.with_argparser(category_parser)
     def do_category(self, args):
         """
         Get the category of a target from its codename
@@ -70,7 +73,10 @@ class SynackCLI(cmd2.Cmd):
         self._get_all_targets()
         print("    " + self.s1.getCategory(args.codename))
         
-    @cmd2.with_argparser(codename_parser)
+    client_name_parser = cmd2.Cmd2ArgumentParser()
+    client_name_parser.add_argument('codename', type=str, help='Target codename')
+        
+    @cmd2.with_argparser(client_name_parser)
     def do_client_name(self, args):
         """
         Get the client name of a target from its codename
@@ -78,7 +84,10 @@ class SynackCLI(cmd2.Cmd):
         self._get_all_targets()
         print("    " + self.s1.clientName(args.codename))
         
-    @cmd2.with_argparser(codename_parser)
+    connect_to_target_parser = cmd2.Cmd2ArgumentParser()
+    connect_to_target_parser.add_argument('codename', type=str, help='Target codename')
+        
+    @cmd2.with_argparser(connect_to_target_parser)
     def do_connect_to_target(self, args):
         """
         Connect to a target by its codename
@@ -86,7 +95,10 @@ class SynackCLI(cmd2.Cmd):
         self._get_all_targets()
         print("    Status Code: %d" % self.s1.connectToTarget(args.codename))
         
-    @cmd2.with_argparser(codename_parser)
+    scope_parser = cmd2.Cmd2ArgumentParser()
+    scope_parser.add_argument('codename', type=str, help='Target codename')
+        
+    @cmd2.with_argparser(scope_parser)
     def do_scope(self, args):
         """
         Get the scope of a target by its codename
@@ -174,7 +186,10 @@ class SynackCLI(cmd2.Cmd):
         else:
             print("    Failed to delete draft!")
             
-    @cmd2.with_argparser(codename_parser)
+    hydra_parser = cmd2.Cmd2ArgumentParser()
+    hydra_parser.add_argument('codename', type=str, help='Target codename')
+            
+    @cmd2.with_argparser(hydra_parser)
     def do_hydra(self, args):
         """
         Get the hydra listings of a target by its codename
@@ -244,7 +259,10 @@ class SynackCLI(cmd2.Cmd):
         else:
             print("    " + self.s1.getCodenameFromSlug(slug))
             
-    @cmd2.with_argparser(codename_parser)
+    roes_parser = cmd2.Cmd2ArgumentParser()
+    roes_parser.add_argument('codename', type=str, help='Target codename')
+            
+    @cmd2.with_argparser(roes_parser)
     def do_roes(self, args):
         """
         Get the ROEs of a target by its codename
