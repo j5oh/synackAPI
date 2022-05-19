@@ -743,22 +743,22 @@ class synack:
         driver.get(self.login_url)
         assert "Synack" in driver.title
 ## Fill in the email address ##
-        email_path = '/html/body/div[2]/div/div/div[2]/form/fieldset/div[1]/input'
+        email_path = '/html/body/div[2]/div/div/div[2]/form/fieldset/input'
         driver.find_element_by_xpath(email_path).click()
         driver.find_element_by_xpath(email_path).send_keys(self.email)
 ## Fill in the password ##
-        password_path = '/html/body/div[2]/div/div/div[2]/form/fieldset/div[2]/input'
+        password_path = '/html/body/div[2]/div/div/div[2]/form/fieldset/div[1]/input'
         driver.find_element_by_xpath(password_path).click()
         driver.find_element_by_xpath(password_path).send_keys(self.password)
 ## Click the login button ##
-        login_path = '/html/body/div[2]/div/div/div[2]/form/fieldset/div[3]/button'
+        login_path = '/html/body/div[2]/div/div/div[2]/form/fieldset/div[2]/button'
         driver.find_element_by_xpath(login_path).click()
         time.sleep(5)
 ## Hope the authy works! ##
-        authy_path = '/html/body/div[2]/div/div/div[2]/form/fieldset/div[1]/input'
+        authy_path = '/html/body/div[2]/div/div/div[2]/form/fieldset/input'
         driver.find_element_by_xpath(authy_path).click()
         driver.find_element_by_xpath(authy_path).send_keys(self.getAuthy())
-        authy_submit_path = '/html/body/div[2]/div/div/div[2]/form/fieldset/div[2]'
+        authy_submit_path = '/html/body/div[2]/div/div/div[2]/form/fieldset/div[1]/button'
         driver.find_element_by_xpath(authy_submit_path).click()
         while True:
             self.token = driver.execute_script("return sessionStorage.getItem('shared-session-com.synack.accessToken')")
@@ -1027,5 +1027,4 @@ class synack:
                     transactions.append(ts.strftime('%Y-%m-%d')+","+str(amount))
             pageIterator=pageIterator+1
         return(transactions)
-
 
