@@ -145,8 +145,10 @@ class synack:
                         else:
                             return response
                     elif func == "PATCH":
+                        newHeaders = dict(self.webheaders)
+                        newHeaders['Content-Type'] = "application/json"
                         # PATCH request does not support `json=` parameter
-                        response = self.session.patch(URL, headers=self.webheaders, proxies=proxyDict, data=extra, verify=False)
+                        response = self.session.patch(URL, headers=newHeaders, proxies=proxyDict, data=extra, verify=False)
                         if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
