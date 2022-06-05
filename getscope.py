@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from synack import synack
-import psycopg2
 import subprocess
 import os
 import sys
@@ -70,14 +69,20 @@ if category == "Web Application":
             path = scope[j]['netloc']
             port = scope[j]['port']
             wildcard = scope[j]['wildcard']
-            tupleList.add(netloc)
+            path = scope[j]['path']
+            netloc = netloc+path
+#            tupleList.add(netloc)
+            print(netloc)
             if wildcard == True:
                 tupleList.add(netloc)
                 burpStr = netloc.replace('.','\.')
+                burpStr = burpStr.replace('/','\/')
                 burpSet.add(wildcardRegex + burpStr)
             else:
                 tupleList.add(netloc)
-                burpSet.add(netloc.replace('.','\.'))
+                burpStr = netloc.replace('.','\.')
+                burpStr = burpStr.replace('/','\/')
+                burpSet.add(burpStr)
 
         for k in range(len(oos)):
             scheme = oos[k]['scheme']
@@ -85,12 +90,17 @@ if category == "Web Application":
             path = oos[k]['netloc']
             port = oos[k]['port']
             wildcard = oos[k]['wildcard']
+            path = oos[k]['path']
+            netloc = netloc + path
             oosTupleList.add(netloc)
             if wildcard == True:
                 oosTupleList.add(netloc)
                 oosBurpStr = netloc.replace('.','\.')
+                oosBurpStr = oosBurpStr.replace('/','\/')
                 oosBurpSet.add(wildcardRegex + oosBurpStr)
             else:
+                oosBurpStr = netloc.replace('.','\.')
+                oosBurpStr = oosBurpStr.replace('/','\/')
                 oosTupleList.add(netloc)
                 oosBurpSet.add(netloc.replace('.','\.'))
         scopeList = list(tupleList)
