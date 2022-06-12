@@ -76,20 +76,14 @@ s1.getAllTargets()
 This method creates an object that can be used to interact with the LP/LP+ platform.
 
 ## connectToPlatform()
-This method takes connects to the Synack platform and writes the session token to disk. It also stays connected by auto-clicking the alert.
-### geckodriver
-This method only been tested with geckodriver/Firefox. Chrome has not been tested. 
-#### SSL Certificates
-This method will create the directory `~/.synack/selenium.profile`. The first time connecting to the SRT Platform, you will be asked to install the cacert.crt file. This allows the cert to be permanently stored and used with geckodriver.
-### Options
-```
-# Push all synack.py traffic through proxy
-# assumes proxy is at http://127.0.0.1:8080
-s1.Proxy = True || False
+This method is used to connect to the Synack platform and writes the session token to disk using requests or Gecko.
 
-# Puts the browser in headless mode for use in a linux environment with no GUI
-s1.headless = True || False
-```
+## connectToPlatformrequests()
+This method 
+
+## connectToPlatformGecko()
+### SSL Certificates
+This method will create the directory `~/.synack/selenium.profile`. The first time connecting to the SRT Platform, you will be asked to install the cacert.crt file. This allows the cert to be permanently stored and used with geckodriver.
 
 ## getSessionToken()
 This method reads a file disk location of `synack.tokenPath` and stores the file contents into the `synack.token` variable. If the file does not contain a valid Synack platform authentication token, the rest of this library will not work.
@@ -213,6 +207,23 @@ This method retrieves all unread notifications and returns a list of dicts with 
   }
 }
 ```
+
+## getVulns(status="accepted")
+This method takes either zero or single parameter (status) and returns a list of all vulns you've submitted. The `status` parameter could be either
+* accepted (default)
+* rejected
+
+## getVuln(identifier)
+This method takes a vulnerability identifier, e.g. CODENAME-###, as a parameter and returns a dict with all details of the vulnerability.
+
+## getDrafts()
+This method returns a list of dictionaries containing data for each draft vulnerability.
+
+## deleteDraft(id)
+This method takes a draft vulnerability identifier (integer value) as a parameter and deletes the draft vulnerability.
+
+## getTransactions()
+This method returns all cashout transactions as list.
 
 ## Docker setup
 There are few ways to run the module under docker, the fastest way will be to obtain it directly and run it using <br>
