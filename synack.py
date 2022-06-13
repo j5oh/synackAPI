@@ -4,6 +4,7 @@ import requests
 import re
 import os
 import json
+import base64
 from pathlib import Path
 import warnings
 import operator
@@ -46,6 +47,7 @@ class synack:
         self.url_notification_token = "https://platform.synack.com/api/users/notifications_token"
         self.url_notification_api = "https://notifications.synack.com/api/v2/"
         self.url_transactions = "https://platform.synack.com/api/transactions"
+        self.url_lp_credentials = "https://platform.synack.com/api/launchpoint/credentials"
         self.webheaders = {}
         self.configFile = str(Path.home())+"/.synack/synack.conf"
         self.firefoxProfile = str(Path.home())+"/.synack/selenium.profile"
@@ -1029,4 +1031,16 @@ class synack:
                     transactions.append(ts.strftime('%Y-%m-%d')+","+str(amount))
             pageIterator=pageIterator+1
         return(transactions)
+        
+########################
+## Get LP Credentials ##
+########################
+    def getLPCredentials(self):
+        response = self.try_requests("GET", self.url_lp_credentials, 10)
+        try:
+            creds = response.json()
+            creds["openvpn_file"] = base64.b64decode(creds["openvpn_file"])
+            return creds
+        except:
+            return
 

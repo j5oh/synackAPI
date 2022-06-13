@@ -4,6 +4,7 @@ import datetime
 import requests
 import ssl
 import socket
+from synack import synack
 
 def process_server_cert(url, port=443, name=None):
     if name is None:
@@ -38,5 +39,19 @@ process_server_cert('amberjack.synack-lp.com')
 # TuPoC
 process_server_cert('x1.pe')
 
-# TODO: LP OpenVPN certs in the configuration file (how do we get these?)
+# OpenVPN LP Cert
+try:
+    s1 = synack()
+    s1.gecko=False
+    s1.getSessionToken()
+    lp_creds = s1.getLPCredentials()
+    ovpn_file = lp_creds["openvpn_file"]
+
+    cert_start = ovpn_file.index(b"-----BEGIN CERTIFICATE-----")
+    cert_end = ovpn_file.index(b"-----END CERTIFICATE-----") + len(b"-----END CERTIFICATE-----")
+    cert = ovpn_file[cert_start:cert_end]
+    process_cert('OpenVPN LP cert', cert)
+    
+except Exception as err:
+    print(f"Could not obtain LP OpenVPN credentials: {err}")
 
