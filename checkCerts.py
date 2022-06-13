@@ -42,6 +42,7 @@ process_server_cert('x1.pe')
 # ¯\_(ツ)_/¯
 process_server_cert('boss.synack.com')
 process_server_cert('client.synack.com')
+process_server_cert('gladiolus.synack.com')
 
 # OpenVPN LP Cert
 try:
