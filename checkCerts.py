@@ -39,6 +39,10 @@ process_server_cert('amberjack.synack-lp.com')
 # TuPoC
 process_server_cert('x1.pe')
 
+# ¯\_(ツ)_/¯
+process_server_cert('boss.synack.com')
+process_server_cert('client.synack.com')
+
 # OpenVPN LP Cert
 try:
     s1 = synack()
