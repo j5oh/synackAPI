@@ -12,17 +12,20 @@ def process_server_cert(url, port=443, name=None):
     process_cert(name, ssl.get_server_certificate((url, port)))
 
 def process_cert(name, cert):
-    x509 = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, cert)
-    exp_date = datetime.datetime.strptime(x509.get_notAfter().decode(), '%Y%m%d%H%M%SZ')
-    now = datetime.datetime.now()
-    
-    exp_days = (exp_date-now).days
-    print(f'{name}: Expires {exp_date.strftime("%Y-%m-%d")} ({exp_days} days)')
-    
-    if exp_days <= 7:
-        print('****************************************************************')
-        print(f'WARNING: {name} is expiring soon! Send Synack a support ticket!')
-        print('****************************************************************')
+    try:
+        x509 = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, cert)
+        exp_date = datetime.datetime.strptime(x509.get_notAfter().decode(), '%Y%m%d%H%M%SZ')
+        now = datetime.datetime.now()
+        
+        exp_days = (exp_date-now).days
+        print(f'{name}: Expires {exp_date.strftime("%Y-%m-%d")} ({exp_days} days)')
+        
+        if exp_days <= 7:
+            print('****************************************************************')
+            print(f'WARNING: {name} is expiring soon! Send Synack a support ticket!')
+            print('****************************************************************')
+    except Exception as err:
+        print(f"Could not retrieve {name}: {err}")
 
 # Platform
 process_server_cert('platform.synack.com')
