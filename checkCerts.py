@@ -20,7 +20,7 @@ def process_cert(name, cert):
         exp_days = (exp_date-now).days
         print(f'{name}: Expires {exp_date.strftime("%Y-%m-%d")} ({exp_days} days)')
         
-        if exp_days <= 7:
+        if exp_days <= 14:
             print('****************************************************************')
             print(f'WARNING: {name} is expiring soon! Send Synack a support ticket!')
             print('****************************************************************')
