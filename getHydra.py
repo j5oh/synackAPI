@@ -13,7 +13,13 @@ def hydraOutput(codename):
             portKeys = list(jsonResponse[i]['ports'][keys[j]])
             for k in range(len(portKeys)):
                 if len(jsonResponse[i]['ports'][keys[j]][portKeys[k]]) > 0:
-                    hydraOut.append(jsonResponse[i]['ip']+":"+keys[j]+":"+portKeys[k])
+                    if "synack" in jsonResponse[i]['ports'][keys[j]][portKeys[k]]:
+                        if "cpe" in jsonResponse[i]['ports'][keys[j]][portKeys[k]]['synack']:
+                            if "parsed" in jsonResponse[i]['ports'][keys[j]][portKeys[k]]['synack']['cpe']:
+                                if jsonResponse[i]['ports'][keys[j]][portKeys[k]]['synack']['cpe']['parsed'] != "":
+                                    hydraOut.append(jsonResponse[i]['ip']+","+keys[j]+","+portKeys[k]+","+jsonResponse[i]['ports'][keys[j]][portKeys[k]]['synack']['cpe']['parsed'])
+                                else:
+                                    hydraOut.append(jsonResponse[i]['ip']+","+keys[j]+","+portKeys[k]+",''")
     return hydraOut
 
 s1 = synack()
