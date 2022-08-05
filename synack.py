@@ -42,7 +42,7 @@ class synack:
         self.url_profile = "https://platform.synack.com/api/profiles/me"
         self.url_analytics = "https://platform.synack.com/api/listing_analytics/categories?listing_id="
         self.url_hydra = "https://platform.synack.com/api/hydra_search/search/"
-        self.url_published_missions = "https://platform.synack.com/api/tasks/v1/tasks?status=PUBLISHED"
+        self.url_published_missions = "https://platform.synack.com/api/tasks/v2/tasks?status=PUBLISHED"
         self.url_logout = "https://platform.synack.com/api/logout"
         self.url_notification_token = "https://platform.synack.com/api/users/notifications_token"
         self.url_notification_api = "https://notifications.synack.com/api/v2/"
