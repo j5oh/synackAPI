@@ -1,5 +1,5 @@
 # Library for interacting with Synack API 
-This is a library and set of scripts that make SRT life a little easier when interacting with the platform from a linux commandline.
+This is a library and set of scripts that make SRT life a little easier when interacting with the platform from an LP+ linux commandline.
 * Connect to platform
   * Stay connected to the platform
 * Register available targets
@@ -20,7 +20,7 @@ Thank you Malcolm, Nicolas, and pmnh for making this better!
 
 # Configuration requirements 
 ## Operating System
-This has been developed on Linux. I have no idea if it will work on Windows. It might, but your mileage may vary. I do not use windows. If you do, and you want to test, please do. 
+This has been developed on LP+ (Linux). I have no idea if it will work on Windows. It might, but your mileage may vary. I do not use windows. If you do, and you want to test, please do. 
 
 ## Configuration Directories
 The required directory is `~/.synack`.
