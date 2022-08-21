@@ -471,7 +471,7 @@ class synack:
                                         'wildcard': wildcard,
                                         'fullURI' : scheme+netloc
                                     }
-                    allRules.append(scopeDict)
+                        allRules.append(scopeDict)
                     j+=1
             return(list(allRules),list(oosRules))
         if category.lower() == "host":
