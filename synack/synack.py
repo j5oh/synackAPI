@@ -25,7 +25,6 @@ from urllib.parse import urlparse
 warnings.filterwarnings("ignore")
 
 class synack:
-    codename = None
     def __init__(self):
         self.session = requests.Session()
         self.jsonResponse = []
@@ -333,6 +332,14 @@ class synack:
     def connectToTarget(self, codename):
         slug = self.getTargetID(codename)
         response = self.try_requests("PUT", self.url_activate_target, 10, slug)
+        time.sleep(5)
+        return response.status_code
+        
+#####################################################
+## This will disconnect you from the target        ##
+#####################################################
+    def disconnectTarget(self):
+        response = self.try_requests("PUT", self.url_activate_target, 10, "")
         time.sleep(5)
         return response.status_code
 
@@ -871,6 +878,18 @@ class synack:
 ## CLAIM MISSIONS ##
 ####################
     def claimMission(self, missionJson, dontclaim, assetType):
+        adjustedAssetType = []
+        
+        for category in assetType:
+            category = category.lower()
+            if category == "web":
+                category = "web application"
+            if category == "re":
+                category = "reverse engineering"
+            if category == "sourcecode":
+                category = "source code"
+            adjustedAssetType.append(category)
+    
         dollarValue = {}
         claim = {'type': 'CLAIM'}
 ################
@@ -886,7 +905,9 @@ class synack:
         for key in sorted_dict.keys():
             target = self.getCodenameFromSlug(missionJson[key]["listing"]["id"])
             category = self.getCategory(target)
-            if(category not in assetType):
+            if(category is None):
+                continue
+            if(category.lower() not in adjustedAssetType):
                 continue
             if(target in dontclaim):
                 continue
