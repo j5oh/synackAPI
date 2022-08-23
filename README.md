@@ -12,7 +12,6 @@ This is a library and set of scripts that make SRT life a little easier when int
   * Codenames
   * Slugs
   * Target types
-* Enable mission-claiming bots
 * Manage notifications
 
 # Acknowledgements
@@ -48,7 +47,6 @@ webhook_url = https://hooks.slack.com/services/...
   * base32 secret for generating Authy tokens
   * Guillaume Boudreau provide a nice [walk through](https://gist.github.com/gboudreau/94bb0c11a6209c82418d01a59d958c93) for getting this secret
     * Follow the above to get Authy into debug mode, then use [THIS CODE](https://gist.github.com/louiszuckerman/2dd4fddf8097ce89594bb33426ab5e23#ok-thats-nice-but-i-want-to-get-rid-of-authy-now) to get your valid TOTP SECRET!
-* webhook_url is the incoming webhook url for slack notifications.  This will be used from the bot.py to inform you about obtained missions in real time. To create one simply visit https://api.slack.com/apps?new_app=1 and create an app to add later an incoming webhook into it.  You can choose any workspace to do so.
 * gecko true/false (default true) - if false, the `requests` module will be used for the login flow, instead of the geckodriver (works well on Windows)
 * proxy true/false (default false) - if true, route requests through a local proxy for debugging
 * proxyport (default 8080) - local proxy port used for debugging
@@ -179,21 +177,6 @@ This method takes a codename and returns a json of all hydra reported in that ta
 ## getRoes(slug):
 This method takes a target slug and returns any additional rules of engagement as a list.
 
-## pollMissions()
-This method polls the API for available missions and returns a json to send to `claimMission(missionJson)`
-
-## claimMission(missionJson)
-This method takes a json from the pollMission() function and attempts to claim available missions based on dollar value, highest to lowest. The return value is a list of dicts in the format:
-```
-[
-  {
-    'target': 'Target Name',
-    'payout': '20',
-    'claimed': False
-  }
-]
-```
-
 ## getNotificationToken()
 This method is used to obtain the bearer token used to authenticate to the notifications.synack.com API.
 
@@ -240,9 +223,5 @@ There are few ways to run the module under docker, the fastest way will be to ob
 ```docker run -d --name synackapi --dns 8.8.8.8 --rm -v ~/.synack:/root/.synack krasn/synackapi```<br>
 The above will run the docker directly under the name synackapi and will use your synack.conf as it's configured per above instructions. The default mode of the docker will be to stay on the background and poll for new targets every hour which will accept.
 <br>
-To run the missions bot an idea will be to run the docker with the following method:<br>
-```docker run -ti --name synackapi --dns 8.8.8.8 --rm -v ~/.synack:/root/.synack krasn/synackapi python3 bot.py```<br>
-or if it's already running <br>
-```docker exec -ti synackapi krasn/synackapi python3 bot.py```<br>
 * Notes ** If would like to build the docker from scratch instructions are on Dockerfile, you will additionally need to modify synack.conf file and set `self.headless = True`
 * To simply pull the docker image and do nothing you can always use ```docker pull krasn/synackapi```

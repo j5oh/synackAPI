@@ -41,7 +41,6 @@ class synack:
         self.url_profile = "https://platform.synack.com/api/profiles/me"
         self.url_analytics = "https://platform.synack.com/api/listing_analytics/categories?listing_id="
         self.url_hydra = "https://platform.synack.com/api/hydra_search/search/"
-        self.url_published_missions = "https://platform.synack.com/api/tasks/v2/tasks?status=PUBLISHED"
         self.url_logout = "https://platform.synack.com/api/logout"
         self.url_notification_token = "https://platform.synack.com/api/users/notifications_token"
         self.url_notification_api = "https://notifications.synack.com/api/v2/"
@@ -861,72 +860,13 @@ class synack:
 ###################
 
 ## Poll for missions ##
-
-    def pollMissions(self):
-        response = self.try_requests("GET", self.url_published_missions, 10)
-        try:
-            jsonResponse = response.json()
-        except:
-            jsonResponse = {}
-        try:
-            return jsonResponse
-        except NameError:
-            jsonResponse = {}
-        return jsonResponse
+## REMOVED FROM CLASS FILE ##
 
 ####################
 ## CLAIM MISSIONS ##
 ####################
-    def claimMission(self, missionJson, dontclaim, assetType):
-        adjustedAssetType = []
-        
-        for category in assetType:
-            category = category.lower()
-            if category == "web":
-                category = "web application"
-            if category == "re":
-                category = "reverse engineering"
-            if category == "sourcecode":
-                category = "source code"
-            adjustedAssetType.append(category)
-    
-        dollarValue = {}
-        claim = {'type': 'CLAIM'}
-################
-## Sort missions by dollar amount high to low
-################
-        for i in range(len(missionJson)):
-            dollarValue[i] = missionJson[i]["payout"]["amount"]
-        sorted_tuples = sorted(dollarValue.items(), key=operator.itemgetter(1), reverse=True)
-        sorted_dict = {k: v for k, v in sorted_tuples}
-################
-        i = len(sorted_dict.keys())
-        missionList = []
-        for key in sorted_dict.keys():
-            target = self.getCodenameFromSlug(missionJson[key]["listing"]["id"])
-            category = self.getCategory(target)
-            if(category is None):
-                continue
-            if(category.lower() not in adjustedAssetType):
-                continue
-            if(target in dontclaim):
-                continue
-            i-= 1
-            campaign = missionJson[key]["campaign"]["title"]
-            campaignID = missionJson[key]["campaign"]["id"]
-            orgID = missionJson[key]["organization"]["id"]
-            slug = missionJson[key]["listing"]["id"]
-            taskID = missionJson[key]["id"]
-            payout = str(missionJson[key]["payout"]["amount"])
-            url_claimPath = "https://platform.synack.com/api/tasks/v1/organizations/" + orgID + "/listings/" + slug + "/campaigns/" + campaignID + "/tasks/" + taskID + "/transitions"
-            claimResponse = self.try_requests("POST", url_claimPath, 10, claim)
-            if claimResponse.status_code == 201:
-                claimed = True
-            else:
-                claimed = False
-            missionDict = {"target": target, "payout": payout, "claimed": claimed}
-            missionList.append(missionDict)
-        return(missionList)
+
+## REMOVED FROM CLASS FILE ##
 
 ########################
 ## Notification Token ##
