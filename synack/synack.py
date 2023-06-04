@@ -32,9 +32,7 @@ class synack:
         self.assessments = []
         self.token = ""
         self.notificationToken = ""
-        self.url_registered_summary = (
-            "https://platform.synack.com/api/targets/registered_summary"
-        )
+        self.url_registered_summary = "https://platform.synack.com/api/targets/registered_summary"
         self.url_scope_summary = "https://platform.synack.com/api/targets/"
         self.url_activate_target = "https://platform.synack.com/api/launchpoint"
         self.url_assessments = "https://platform.synack.com/api/assessments"
@@ -42,19 +40,13 @@ class synack:
         self.url_drafts = "https://platform.synack.com/api/drafts"
         self.url_unregistered_slugs = "https://platform.synack.com/api/targets?filter%5Bprimary%5D=unregistered&filter%5Bsecondary%5D=all&filter%5Bcategory%5D=all&sorting%5Bfield%5D=dateUpdated&sorting%5Bdirection%5D=desc&pagination%5Bpage%5D="
         self.url_profile = "https://platform.synack.com/api/profiles/me"
-        self.url_analytics = (
-            "https://platform.synack.com/api/listing_analytics/categories?listing_id="
-        )
+        self.url_analytics = "https://platform.synack.com/api/listing_analytics/categories?listing_id="
         self.url_hydra = "https://platform.synack.com/api/hydra_search/search/"
         self.url_logout = "https://platform.synack.com/api/logout"
-        self.url_notification_token = (
-            "https://platform.synack.com/api/users/notifications_token"
-        )
+        self.url_notification_token = "https://platform.synack.com/api/users/notifications_token"
         self.url_notification_api = "https://notifications.synack.com/api/v2/"
         self.url_transactions = "https://platform.synack.com/api/transactions"
-        self.url_lp_credentials = (
-            "https://platform.synack.com/api/launchpoint/credentials"
-        )
+        self.url_lp_credentials = "https://platform.synack.com/api/launchpoint/credentials"
         self.webheaders = {}
         self.configFile = str(Path.home()) + "/.synack/synack.conf"
         self.firefoxProfile = str(Path.home()) + "/.synack/selenium.profile"
@@ -65,12 +57,8 @@ class synack:
         self.login_wait = int(self.config["DEFAULT"]["login_wait"])
         self.login_url = self.config["DEFAULT"]["login_url"]
         self.authySecret = self.config["DEFAULT"]["authy_secret"]
-        self.sessionTokenPath = self.config["DEFAULT"].get(
-            "session_token_path", "/tmp/synacktoken"
-        )
-        self.notificationTokenPath = self.config["DEFAULT"].get(
-            "notification_token_path", "/tmp/notificationtoken"
-        )
+        self.sessionTokenPath = self.config["DEFAULT"].get("session_token_path", "/tmp/synacktoken")
+        self.notificationTokenPath = self.config["DEFAULT"].get("notification_token_path", "/tmp/notificationtoken")
         self.connector = False
         self.webdriver = None
         self.headless = False
@@ -125,13 +113,7 @@ class synack:
                         putData = json.dumps({"listing_id": extra})
                         newHeaders = dict(self.webheaders)
                         newHeaders["Content-Type"] = "application/json"
-                        response = self.session.put(
-                            URL,
-                            headers=newHeaders,
-                            data=putData,
-                            proxies=proxyDict,
-                            verify=False,
-                        )
+                        response = self.session.put(URL, headers=newHeaders, data=putData, proxies=proxyDict, verify=False)
                         if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
@@ -139,12 +121,7 @@ class synack:
                             return response
                     elif func == "GET":
                         if extra == None:
-                            response = self.session.get(
-                                URL,
-                                headers=self.webheaders,
-                                proxies=proxyDict,
-                                verify=False,
-                            )
+                            response = self.session.get(URL, headers=self.webheaders, proxies=proxyDict, verify=False)
                             if response.status_code == 401 and platform in netloc:
                                 self.connectToPlatform()
                                 self.getSessionToken()
@@ -152,26 +129,14 @@ class synack:
                                 return response
                         else:
                             parameters = {"page": extra}
-                            response = self.session.get(
-                                URL,
-                                headers=self.webheaders,
-                                params=parameters,
-                                proxies=proxyDict,
-                                verify=False,
-                            )
+                            response = self.session.get(URL, headers=self.webheaders, params=parameters, proxies=proxyDict, verify=False)
                             if response.status_code == 401 and platform in netloc:
                                 self.connectToPlatform()
                                 self.getSessionToken()
                             else:
                                 return response
                     elif func == "POST":
-                        response = self.session.post(
-                            URL,
-                            headers=self.webheaders,
-                            proxies=proxyDict,
-                            json=extra,
-                            verify=False,
-                        )
+                        response = self.session.post(URL, headers=self.webheaders, proxies=proxyDict, json=extra, verify=False)
                         if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
@@ -181,26 +146,14 @@ class synack:
                         newHeaders = dict(self.webheaders)
                         newHeaders["Content-Type"] = "application/json"
                         # PATCH request does not support `json=` parameter
-                        response = self.session.patch(
-                            URL,
-                            headers=newHeaders,
-                            proxies=proxyDict,
-                            data=extra,
-                            verify=False,
-                        )
+                        response = self.session.patch(URL, headers=newHeaders, proxies=proxyDict, data=extra, verify=False)
                         if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
                         else:
                             return response
                     elif func == "DELETE":
-                        response = self.session.delete(
-                            URL,
-                            headers=self.webheaders,
-                            proxies=proxyDict,
-                            json=extra,
-                            verify=False,
-                        )
+                        response = self.session.delete(URL, headers=self.webheaders, proxies=proxyDict, json=extra, verify=False)
                         if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
@@ -216,9 +169,7 @@ class synack:
                         putData = json.dumps({"listing_id": extra})
                         newHeaders = dict(self.webheaders)
                         newHeaders["Content-Type"] = "application/json"
-                        response = self.session.put(
-                            URL, headers=newHeaders, data=putData, verify=False
-                        )
+                        response = self.session.put(URL, headers=newHeaders, data=putData, verify=False)
                         if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
@@ -226,9 +177,7 @@ class synack:
                             return response
                     elif func == "GET":
                         if extra == None:
-                            response = self.session.get(
-                                URL, headers=self.webheaders, verify=False
-                            )
+                            response = self.session.get(URL, headers=self.webheaders, verify=False)
                             if response.status_code == 401 and platform in netloc:
                                 self.connectToPlatform()
                                 self.getSessionToken()
@@ -236,21 +185,14 @@ class synack:
                                 return response
                         else:
                             parameters = {"page": extra}
-                            response = self.session.get(
-                                URL,
-                                headers=self.webheaders,
-                                params=parameters,
-                                verify=False,
-                            )
+                            response = self.session.get(URL, headers=self.webheaders, params=parameters, verify=False)
                             if response.status_code == 401 and platform in netloc:
                                 self.connectToPlatform()
                                 self.getSessionToken()
                             else:
                                 return response
                     elif func == "POST":
-                        response = self.session.post(
-                            URL, headers=self.webheaders, json=extra, verify=False
-                        )
+                        response = self.session.post(URL, headers=self.webheaders, json=extra, verify=False)
                         if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
@@ -260,18 +202,14 @@ class synack:
                         # PATCH request does not support `json=` parameter
                         newHeaders = dict(self.webheaders)
                         newHeaders["Content-Type"] = "application/json"
-                        response = self.session.request(
-                            "PATCH", URL, headers=newHeaders, data=extra, verify=False
-                        )
+                        response = self.session.request("PATCH", URL, headers=newHeaders, data=extra, verify=False)
                         if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
                         else:
                             return response
                     elif func == "DELETE":
-                        response = self.session.delete(
-                            URL, headers=self.webheaders, json=extra, verify=False
-                        )
+                        response = self.session.delete(URL, headers=self.webheaders, json=extra, verify=False)
                         if response.status_code == 401 and platform in netloc:
                             self.connectToPlatform()
                             self.getSessionToken()
@@ -317,14 +255,7 @@ class synack:
     ## mission_only: True || False
     ########################################
     def getCodenames(self, category, mission_only=False):
-        categories = (
-            "web application",
-            "re",
-            "mobile",
-            "host",
-            "source code",
-            "hardware",
-        )
+        categories = ("web application", "re", "mobile", "host", "source code", "hardware")
         category = category.lower()
         if category == "web":
             category = "web application"
@@ -338,10 +269,7 @@ class synack:
         for i in range(len(self.jsonResponse)):
             if mission_only == True:
                 if self.jsonResponse[i]["vulnerability_discovery"] == False:
-                    if (
-                        self.jsonResponse[i]["category"]["name"].lower()
-                        == category.lower()
-                    ):
+                    if self.jsonResponse[i]["category"]["name"].lower() == category.lower():
                         targets.append(self.jsonResponse[i]["codename"])
                     else:
                         continue
@@ -349,10 +277,7 @@ class synack:
                     continue
             elif mission_only == False:
                 if self.jsonResponse[i]["vulnerability_discovery"] == True:
-                    if (
-                        self.jsonResponse[i]["category"]["name"].lower()
-                        == category.lower()
-                    ):
+                    if self.jsonResponse[i]["category"]["name"].lower() == category.lower():
                         targets.append(self.jsonResponse[i]["codename"])
                     else:
                         continue
@@ -497,22 +422,13 @@ class synack:
 
             return (list(inScopeRules), list(oosRules))
         if category.lower() == "host":
-            scopeURL = (
-                "https://platform.synack.com/api/targets/" + slug + "/cidrs?page=all"
-            )
+            scopeURL = "https://platform.synack.com/api/targets/" + slug + "/cidrs?page=all"
             cidrs = []
             try:
                 response = self.try_requests("GET", scopeURL, 10)
             except requests.exceptions.RequestException as e:
                 raise SystemExit(e)
-            temp = (
-                json.dumps(response.json()["cidrs"])
-                .replace("[", "")
-                .replace("]", "")
-                .replace('"', "")
-                .replace(", ", "\n")
-                .split("\n")
-            )
+            temp = json.dumps(response.json()["cidrs"]).replace("[", "").replace("]", "").replace('"', "").replace(", ", "\n").split("\n")
             cidrs.extend(temp)
             cidrs = list(set(cidrs))
             return cidrs
@@ -561,24 +477,11 @@ class synack:
         if targetType == "Web Application":
             if "value" in jsonResponse:
                 for value in range(len(jsonResponse["value"])):
-                    for exploitable_location in range(
-                        len(jsonResponse["value"][value]["exploitable_locations"])
-                    ):
+                    for exploitable_location in range(len(jsonResponse["value"][value]["exploitable_locations"])):
                         analyticsDict = {}
-                        if (
-                            jsonResponse["value"][value]["exploitable_locations"][
-                                exploitable_location
-                            ]["type"]
-                            == "url"
-                        ):
+                        if jsonResponse["value"][value]["exploitable_locations"][exploitable_location]["type"] == "url":
                             try:
-                                URI = urlparse(
-                                    str(
-                                        jsonResponse["value"][value][
-                                            "exploitable_locations"
-                                        ][exploitable_location]["value"]
-                                    )
-                                )
+                                URI = urlparse(str(jsonResponse["value"][value]["exploitable_locations"][exploitable_location]["value"]))
                                 scheme = URI.scheme
                             except:
                                 scheme = "https"
@@ -593,13 +496,9 @@ class synack:
                                 elif scheme == "https":
                                     analyticsDict["port"] = "443"
                             analyticsDict["codename"] = codename
-                            analyticsDict["vuln_category"] = str(
-                                jsonResponse["value"][value]["categories"][0]
-                            )
+                            analyticsDict["vuln_category"] = str(jsonResponse["value"][value]["categories"][0])
                             if len(jsonResponse["value"][value]["categories"]) == 2:
-                                analyticsDict["vuln_subcategory"] = str(
-                                    jsonResponse["value"][value]["categories"][1]
-                                )
+                                analyticsDict["vuln_subcategory"] = str(jsonResponse["value"][value]["categories"][1])
                             else:
                                 pass
                             analyticsDict["scheme"] = "URL"
@@ -609,12 +508,7 @@ class synack:
                                 analyticsDict["protocol"] = "http"
                                 pass
                             try:
-                                analyticsDict["vuln_location"] = (
-                                    analyticsDict["protocol"]
-                                    + "://"
-                                    + URI.netloc
-                                    + URI.path
-                                )
+                                analyticsDict["vuln_location"] = analyticsDict["protocol"] + "://" + URI.netloc + URI.path
                             except:
                                 analyticsDict["vuln_location"] = ""
                                 pass
@@ -622,9 +516,7 @@ class synack:
                                 analyticsDict["status"] = "rejected"
                             else:
                                 analyticsDict["status"] = str(
-                                    jsonResponse["value"][value][
-                                        "exploitable_locations"
-                                    ][exploitable_location]["status"]
+                                    jsonResponse["value"][value]["exploitable_locations"][exploitable_location]["status"]
                                 )
                             analytics.append(analyticsDict)
             return analytics
@@ -632,24 +524,11 @@ class synack:
             #'codename', 'vuln_category', 'vuln_subcategory', 'vuln_location', 'type', 'protocol', 'port', 'path', 'status'
             if "value" in jsonResponse:
                 for value in range(len(jsonResponse["value"])):
-                    for exploitable_location in range(
-                        len(jsonResponse["value"][value]["exploitable_locations"])
-                    ):
+                    for exploitable_location in range(len(jsonResponse["value"][value]["exploitable_locations"])):
                         analyticsDict = {}
-                        if (
-                            jsonResponse["value"][value]["exploitable_locations"][
-                                exploitable_location
-                            ]["type"]
-                            == "url"
-                        ):
+                        if jsonResponse["value"][value]["exploitable_locations"][exploitable_location]["type"] == "url":
                             try:
-                                URI = urlparse(
-                                    str(
-                                        jsonResponse["value"][value][
-                                            "exploitable_locations"
-                                        ][exploitable_location]["value"]
-                                    )
-                                )
+                                URI = urlparse(str(jsonResponse["value"][value]["exploitable_locations"][exploitable_location]["value"]))
                                 scheme = URI.scheme
                             except:
                                 scheme = "https"
@@ -664,13 +543,9 @@ class synack:
                                 elif scheme == "https":
                                     analyticsDict["port"] = "443"
                             analyticsDict["codename"] = codename
-                            analyticsDict["vuln_category"] = str(
-                                jsonResponse["value"][value]["categories"][0]
-                            )
+                            analyticsDict["vuln_category"] = str(jsonResponse["value"][value]["categories"][0])
                             if len(jsonResponse["value"][value]["categories"]) == 2:
-                                analyticsDict["vuln_subcategory"] = str(
-                                    jsonResponse["value"][value]["categories"][1]
-                                )
+                                analyticsDict["vuln_subcategory"] = str(jsonResponse["value"][value]["categories"][1])
                             else:
                                 pass
                             analyticsDict["scheme"] = "URL"
@@ -680,12 +555,7 @@ class synack:
                                 analyticsDict["protocol"] = "http"
                                 pass
                             try:
-                                analyticsDict["vuln_location"] = (
-                                    analyticsDict["protocol"]
-                                    + "://"
-                                    + URI.netloc
-                                    + URI.path
-                                )
+                                analyticsDict["vuln_location"] = analyticsDict["protocol"] + "://" + URI.netloc + URI.path
                             except:
                                 analyticsDict["vuln_location"] = ""
                                 pass
@@ -693,51 +563,32 @@ class synack:
                                 analyticsDict["status"] = "rejected"
                             else:
                                 analyticsDict["status"] = str(
-                                    jsonResponse["value"][value][
-                                        "exploitable_locations"
-                                    ][exploitable_location]["status"]
+                                    jsonResponse["value"][value]["exploitable_locations"][exploitable_location]["status"]
                                 )
                             analytics.append(analyticsDict)
-                        elif (
-                            jsonResponse["value"][value]["exploitable_locations"][
-                                exploitable_location
-                            ]["type"]
-                            == "ip"
-                        ):
+                        elif jsonResponse["value"][value]["exploitable_locations"][exploitable_location]["type"] == "ip":
                             ## IP
                             analyticsDict["codename"] = codename
-                            analyticsDict["vuln_category"] = str(
-                                jsonResponse["value"][value]["categories"][0]
-                            )
+                            analyticsDict["vuln_category"] = str(jsonResponse["value"][value]["categories"][0])
                             if len(jsonResponse["value"][value]["categories"]) == 2:
-                                analyticsDict["vuln_subcategory"] = str(
-                                    jsonResponse["value"][value]["categories"][1]
-                                )
+                                analyticsDict["vuln_subcategory"] = str(jsonResponse["value"][value]["categories"][1])
                             else:
                                 pass
                             analyticsDict["scheme"] = "HOST"
                             analyticsDict["protocol"] = str(
-                                jsonResponse["value"][value]["exploitable_locations"][
-                                    exploitable_location
-                                ]["protocol"]
+                                jsonResponse["value"][value]["exploitable_locations"][exploitable_location]["protocol"]
                             )
                             analyticsDict["vuln_location"] = str(
-                                jsonResponse["value"][value]["exploitable_locations"][
-                                    exploitable_location
-                                ]["address"]
+                                jsonResponse["value"][value]["exploitable_locations"][exploitable_location]["address"]
                             )
                             analyticsDict["port"] = str(
-                                jsonResponse["value"][value]["exploitable_locations"][
-                                    exploitable_location
-                                ]["port"]
+                                jsonResponse["value"][value]["exploitable_locations"][exploitable_location]["port"]
                             )
                             if status.lower() == "rejected":
                                 analyticsDict["status"] = "rejected"
                             else:
                                 analyticsDict["status"] = str(
-                                    jsonResponse["value"][value][
-                                        "exploitable_locations"
-                                    ][exploitable_location]["status"]
+                                    jsonResponse["value"][value]["exploitable_locations"][exploitable_location]["status"]
                                 )
                             analytics.append(analyticsDict)
             return analytics
@@ -764,11 +615,7 @@ class synack:
                 next_page = False
                 pageNum += 1
         for i in range(len(unregistered_slugs)):
-            url_register_slug = (
-                "https://platform.synack.com/api/targets/"
-                + unregistered_slugs[i]
-                + "/signup"
-            )
+            url_register_slug = "https://platform.synack.com/api/targets/" + unregistered_slugs[i] + "/signup"
             data = '{"ResearcherListing":{"terms":1}}'
             response = self.try_requests("POST", url_register_slug, 10, data)
             slug = unregistered_slugs[i]
@@ -804,18 +651,12 @@ class synack:
             if cookie_value.find("\r") > -1 or cookie_value.find("\n") > -1:
                 print("Fixing cookie %s" % cookie_name)
                 cookie_value = re.sub("\r\n *", "", cookie_value)
-                cookie_obj = requests.cookies.create_cookie(
-                    name=cookie_name, value=cookie_value, path="/"
-                )
-                self.session.cookies.clear(
-                    domain="login.synack.com", path="/", name=cookie_name
-                )
+                cookie_obj = requests.cookies.create_cookie(name=cookie_name, value=cookie_value, path="/")
+                self.session.cookies.clear(domain="login.synack.com", path="/", name=cookie_name)
                 self.session.cookies.set_cookie(cookie_obj)
 
         data = {"email": self.email, "password": self.password}
-        response = self.try_requests(
-            "POST", "https://login.synack.com/api/authenticate", 1, data
-        )
+        response = self.try_requests("POST", "https://login.synack.com/api/authenticate", 1, data)
         jsonResponse = response.json()
         if not jsonResponse["success"]:
             print("Error logging in: " + jsonResponse)
@@ -824,21 +665,15 @@ class synack:
         progress_token = jsonResponse["progress_token"]
 
         data = {"authy_token": self.getAuthy(), "progress_token": progress_token}
-        response = self.try_requests(
-            "POST", "https://login.synack.com/api/authenticate", 1, data
-        )
+        response = self.try_requests("POST", "https://login.synack.com/api/authenticate", 1, data)
         jsonResponse = response.json()
 
         grant_token = jsonResponse["grant_token"]
 
         # 2 requests required here to confirm the grant token - once to the HTML page and once to the API
-        response = self.try_requests(
-            "GET", "https://platform.synack.com/?grant_token=" + grant_token, 1
-        )
+        response = self.try_requests("GET", "https://platform.synack.com/?grant_token=" + grant_token, 1)
         self.webheaders["X-Requested-With"] = "XMLHttpRequest"
-        response = self.try_requests(
-            "GET", "https://platform.synack.com/token?grant_token=" + grant_token, 1
-        )
+        response = self.try_requests("GET", "https://platform.synack.com/token?grant_token=" + grant_token, 1)
         jsonResponse = response.json()
         access_token = jsonResponse["access_token"]
 
@@ -885,14 +720,10 @@ class synack:
         authy_path = "/html/body/div[2]/div/div/div[2]/form/fieldset/input"
         driver.find_element_by_xpath(authy_path).click()
         driver.find_element_by_xpath(authy_path).send_keys(self.getAuthy())
-        authy_submit_path = (
-            "/html/body/div[2]/div/div/div[2]/form/fieldset/div[1]/button"
-        )
+        authy_submit_path = "/html/body/div[2]/div/div/div[2]/form/fieldset/div[1]/button"
         driver.find_element_by_xpath(authy_submit_path).click()
         while True:
-            self.token = driver.execute_script(
-                "return sessionStorage.getItem('shared-session-com.synack.accessToken')"
-            )
+            self.token = driver.execute_script("return sessionStorage.getItem('shared-session-com.synack.accessToken')")
             if isinstance(self.token, str):
                 break
         ## Write the session token to /tmp/synacktoken ##
@@ -914,14 +745,7 @@ class synack:
         pageNum = 1
         results = []
         while True:
-            url_vulnerabilities = (
-                self.url_vulnerabilities
-                + "?filters%5Bstatus%5D="
-                + status
-                + "&page="
-                + str(pageNum)
-                + "&per_page=5"
-            )
+            url_vulnerabilities = self.url_vulnerabilities + "?filters%5Bstatus%5D=" + status + "&page=" + str(pageNum) + "&per_page=5"
             response = self.try_requests("GET", url_vulnerabilities, 10)
             vulnsResponse = response.json()
             if len(vulnsResponse) == 0:
@@ -973,14 +797,7 @@ class synack:
         pageNum = 1
         hydraResults = []
         while True:
-            url_hydra = (
-                self.url_hydra
-                + "?page="
-                + str(pageNum)
-                + "&listing_uids="
-                + slug
-                + "&q=%2Bport_is_open%3Atrue"
-            )
+            url_hydra = self.url_hydra + "?page=" + str(pageNum) + "&listing_uids=" + slug + "&q=%2Bport_is_open%3Atrue"
             response = self.try_requests("GET", url_hydra, 10)
             hydraResponse = response.json()
             if len(hydraResponse) == 0:
@@ -1026,11 +843,7 @@ class synack:
     def markNotificationsRead(self):
         if not self.notificationToken:
             self.getNotificationToken()
-        readNotifications = (
-            self.url_notification_api
-            + "read_all?authorization_token="
-            + self.notificationToken
-        )
+        readNotifications = self.url_notification_api + "read_all?authorization_token=" + self.notificationToken
         del self.webheaders["Authorization"]
         response = self.try_requests("POST", readNotifications, 10)
         self.webheaders["Authorization"] = "Bearer " + self.token
@@ -1118,9 +931,7 @@ class synack:
         breakOuterLoop = 0
         transactions = []
         while True:
-            transactionUrl = (
-                self.url_transactions + "?page=" + str(pageIterator) + "&per_page=15"
-            )
+            transactionUrl = self.url_transactions + "?page=" + str(pageIterator) + "&per_page=15"
             response = self.try_requests("GET", transactionUrl, 10)
             try:
                 jsonResponse = response.json()
