@@ -136,7 +136,11 @@ This method takes a project slug and returns the target codename. This method is
 This method returns the slug of whatever target you are connected to. If not connected to a target, this will return `None`.
 
 ## getScope(codename)
-This method takes a codename and returns its scope as a list of dicts.
+This method takes a codename and returns its scope as two lists of dictionaries.
+
+**The first list of dictionaries is the in-scope items, and the second list of dictionaries is the out of scope items.**
+
+
 * `Host` targets return the CIDR notation ranges
 * `Web Application` targets return the expanded list of rules:
   * scheme: (http || https)
@@ -162,6 +166,20 @@ https://www.example.com/*
     'wildcard': True
   }
 ]
+```
+
+So for example, if you wanted to retrieve a list of in-scope items, and only include those which were wildcards, only grab the domain, and ensure they are unique, you could do something like this:
+
+```
+scope = s1.getScope(codename)[0]
+current_set = set()
+for s in scope:
+     wildcard = s['wildcard']
+     if wildcard == True:
+         host = s['netloc']
+         if host not in current_set:
+             current_set.add(host)
+target_list = list(current_set)
 ```
 
 ## registerAll()
