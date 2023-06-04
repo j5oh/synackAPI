@@ -137,6 +137,9 @@ This method returns the slug of whatever target you are connected to. If not con
 
 ## getScope(codename)
 This method takes a codename and returns its scope as a list of dicts.
+
+**The first dict is the in scope items, and the second the out of scope items.**
+
 * `Host` targets return the CIDR notation ranges
 * `Web Application` targets return the expanded list of rules:
   * scheme: (http || https)
